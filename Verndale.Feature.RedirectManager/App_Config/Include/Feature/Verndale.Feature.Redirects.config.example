@@ -1,0 +1,96 @@
+<!--
+Purpose: This include file is to enable the Redirect Tool by overwrite the item not found handler
+To enable this, rename this file so that it has a ".config" extension
+-->
+
+<configuration xmlns:patch="http://www.sitecore.net/xmlconfig/">
+	<sitecore>
+		<sites>
+			<!-- NOT FOUND PAGE ID For use with patch for handling 404 post Item resolver(PageNotFoundHandler), each site entry should have it's own 404 Page -->
+			<site name="website">
+				<patch:attribute name="NotFoundPageID">{AD0B8EBD-3635-42DA-B390-D72D4BF73B83}</patch:attribute>
+			</site>
+		</sites>
+		<settings>
+
+			<!--  USE SERVER-SIDE REDIRECT FOR REQUEST ERRORS
+			Overwrite the default value (false) because the Redirect Manager needs to use Server.Transfer instead of Response.Redirect 
+			to redirect request to service pages when an error occurs (item not found, access denied etc).
+			This will allow the Redirect Manager to set an appropriate response code.
+			-->
+			<setting name="RequestErrors.UseServerSideRedirect">
+				<patch:attribute name="value">true</patch:attribute>
+			</setting>
+
+
+			<!--  SAVE RAW URL ON LOGIN
+			Specifies whether the original request URL is passed to the login page 
+			(saved in 'url' query string parameter).
+			Default: false
+			-->
+			<setting name="Authentication.SaveRawUrl">
+				<patch:attribute name="value">true</patch:attribute>
+			</setting>
+
+			<!-- Auto update redirect manager entries settings -->
+
+			<!-- If set to true - when an item is moved - on publish - an entry is added into redirect manager with old and new paths
+			If an entry already exists which redirects to the old url (before move) - that entry is merely updated 
+			-->
+			<setting name="Verndale.Feature.Redirects.EnableAutoRedirect.Move" value="false" />
+
+			<!-- If set to true - when an item is renamed - on publish - an entry is added into redirect manager with old and new paths
+			If an entry already exists which redirects to the old url (before rename) - that entry is merely updated 
+			-->
+			<setting name="Verndale.Feature.Redirects.EnableAutoRedirect.Rename" value="false" />
+
+			<!-- If set to true - when an item is deleted - on publish - an entry is added to redirect manager with old path and 
+			new path set to site Home, also if there is any existing redirect to this item, the new url for this redirect is set to home 
+			-->
+			<setting name="Verndale.Feature.Redirects.EnableAutoRedirect.Delete" value="false" />
+		</settings>
+
+		<commands>
+			<command name="redirectmanager:delete" type="Verndale.Feature.Redirects.Commands.Delete,Verndale.Feature.Redirects"/>
+			<command name="redirectmanager:newredirect" type="Verndale.Feature.Redirects.Commands.New,Verndale.Feature.Redirects"/>
+			<command name="redirectmanager:clearall" type="Verndale.Feature.Redirects.Commands.ClearAll,Verndale.Feature.Redirects"/>
+			<command name="redirectmanager:import" type="Verndale.Feature.Redirects.Commands.Import,Verndale.Feature.Redirects"/>
+			<command name="redirectmanager:export" type="Verndale.Feature.Redirects.Commands.Export,Verndale.Feature.Redirects"/>
+			<command name="redirectmanager:editredirect" type="Verndale.Feature.Redirects.Commands.Edit,Verndale.Feature.Redirects"/>
+		</commands>
+
+		<AntiCsrf cookieName="__CSRFCOOKIE" formFieldName="__CSRFTOKEN" detectionResult="RaiseException" errorPage="" enabled="true">
+			<rules>
+				<rule name="shell">
+					<ignore contains="Applications/Redirect Manager" />
+				</rule>
+			</rules>
+		</AntiCsrf>
+
+		<AntiCsrf>
+			<rules>
+				<rule name="shell">
+					<ignore contains="Applications/Redirect Manager"/>
+				</rule>
+			</rules>
+		</AntiCsrf>
+
+		<!-- Patch on to httprequestpipeline to perform redirect operations and to ensure to land on PageNotFound Guid specified on the setting RedirectNotFoundItemGUID for specific site  -->
+		<pipelines>
+			<httpRequestBegin>
+				<processor
+					type="Verndale.Feature.Redirects.Pipelines.HttpRequest.RedirectResolver, Verndale.Feature.Redirects"
+					patch:after="processor[@type='Sitecore.Pipelines.HttpRequest.ItemResolver, Sitecore.Kernel']">
+					<databasesToIgnore>core</databasesToIgnore>
+					<sitesToIgnore>shell,login,admin,service,modules_shell,modules_website,scheduler,system,publisher</sitesToIgnore>
+				</processor>
+				<processor
+					type="Verndale.Feature.Redirects.Pipelines.HttpRequest.PageNotFoundResolver, Verndale.Feature.Redirects"
+					patch:after="processor[@type='Verndale.Feature.Redirects.Pipelines.HttpRequest.RedirectResolver, Verndale.Feature.Redirects']">
+					<databasesToIgnore>core</databasesToIgnore>
+					<sitesToIgnore>shell,login,admin,service,modules_shell,modules_website,scheduler,system,publisher</sitesToIgnore>
+				</processor>
+			</httpRequestBegin>
+		</pipelines>
+	</sitecore>
+</configuration>

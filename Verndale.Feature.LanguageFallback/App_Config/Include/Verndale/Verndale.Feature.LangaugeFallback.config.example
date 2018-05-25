@@ -1,0 +1,207 @@
+<configuration xmlns:patch="http://www.sitecore.net/xmlconfig/">
+	<sitecore>
+
+		<!-- Override the size of languageFallbackFieldValues cache per database -->
+		<databases>
+			<database id="master">
+				<cacheSizes hint="setting">
+					<languageFallbackFieldValues>20MB</languageFallbackFieldValues>
+				</cacheSizes>
+			</database>
+			<database id="web">
+				<cacheSizes hint="setting">
+					<languageFallbackFieldValues>20MB</languageFallbackFieldValues>
+				</cacheSizes>
+			</database>
+		</databases>
+
+		<pipelines>
+			<httpRequestBegin>
+				<!-- Custom pipeline processor that will set the .net culture based on the current sitecore context language -->
+				<processor patch:after="*[@type='Sitecore.Pipelines.HttpRequest.LanguageResolver, Sitecore.Kernel']" type="Verndale.SharedSource.SitecoreProcessors.CultureResolver, Verndale.LanguageEnhancements">
+					<databasesToIgnore>core</databasesToIgnore>
+					<sitesToIgnore>shell,login,admin,service,modules_shell,modules_website,scheduler,system,publisher</sitesToIgnore>
+				</processor>
+			</httpRequestBegin>
+		</pipelines>
+
+		<events timingLevel="custom">
+			<event name="item:created">
+				<handler type=" Verndale.SharedSource.SitecoreProcessors.CreateVersionInAllLanguagesOnCreate, Verndale.LanguageEnhancements" method="OnItemCreated"/>
+			</event>
+		</events>
+
+		<sites>
+			<site name="shell">
+				<!--If it is not enabled on shell, it doesn't display [fallback value] next to label-->
+				<patch:attribute name="enableItemLanguageFallback">false</patch:attribute>
+				<patch:attribute name="enableFieldLanguageFallback">false</patch:attribute>
+			</site>
+
+			<!--enableItemLanguageFallback, used with Item Language Fallback checkbox on items in Sitecore-->
+			<!--enableFieldLanguageFallback, used with Field Language Fallback checkbox on template field items in Sitecore-->
+			<!--enforceVersionPresence: for use with Enforce Version Presence checkbox on items in Sitecore-->
+			<!--
+		languageEmbedding: for use with a CustomLinkProvider and LanguageHelper.CheckOverrideLanguageEmbedding in Verndale.LanguageEnhancements, always/never/asNeeded
+		Override LinkManager to do something like the following:
+		urlOptions = LanguageHelper.CheckOverrideLanguageEmbedding(urlOptions);
+		return base.GetItemUrl(item, urlOptions);
+	  -->
+			<!--mappedLanguages is used to determine which site matches the current language so the targetHostname can be retrieved, pipe delimited
+	  Used in LanguageHelper GetAlternateLinksForPage method for meta data on each page
+	  Can be output with  @Html.Raw(LanguageHelper.GetAlternateLinksForPage())
+	  -->
+			<site name="basesite">
+				<patch:attribute name="enableItemLanguageFallback">false</patch:attribute>
+				<patch:attribute name="enableFieldLanguageFallback">false</patch:attribute>
+				<patch:attribute name="enforceVersionPresence">false</patch:attribute>
+				<patch:attribute name="languageEmbedding">never</patch:attribute>
+				<patch:attribute name="supportedLanguages">en</patch:attribute>
+			</site>
+			<site name="website">
+				<patch:attribute name="enableItemLanguageFallback">false</patch:attribute>
+				<patch:attribute name="enableFieldLanguageFallback">false</patch:attribute>
+				<patch:attribute name="enforceVersionPresence">false</patch:attribute>
+				<patch:attribute name="languageEmbedding">never</patch:attribute>
+				<patch:attribute name="supportedLanguages">en,es,fr-CA</patch:attribute>
+				<patch:attribute name="autoCreateLanguageVersions">true</patch:attribute>
+			</site>
+		</sites>
+
+		<settings>
+			<!--  CACHING - LANGUAGE FALLBACK FIELD VALUES - DEFAULT CACHE SIZE
+			  Determines the default size of the cache that stores the language fallback field values.
+			  Specify the value in bytes or append the value with KB, MB or GB.
+			  
+			  Default value: 20MB.
+	  -->
+			<setting name="Caching.LanguageFallbackFieldValues.DefaultCacheSize">
+				<patch:attribute name="value">20MB</patch:attribute>
+			</setting>
+
+			<!--  LANGUAGE FIELD FALLBACK - ALLOW VARY FALLBACK SETTINGS PER LANGUAGE
+			  If set to 'true', then values from both versioned 'Enable Language Fallback' and shared 'Enable Shared Language Fallback' checkbox fields
+			  on the field definition item are used to determine whether language fallback functionality should be enabled for the corresponding field.
+			  It allows you to have different fallback settings for the same field in different content languages.
+			  
+			  Example: when 'en-CA' tries to fallback to 'en', the checkbox field will be retrieved from the field definition item in 'en-CA',
+			  thus such version should exist. If retrieved value is 'false', then the 'Enable Shared Language Fallback' checkbox field is used.
+			  
+			  Note: enabling this feature has negative impact on performance.
+
+			  If set to 'false', only the shared 'Enable Shared Language Fallback' checkbox field on the field definition item is used to determine whether
+			  language fallback functionality should be enabled for the corresponding field.
+										  
+			  Default value: false.
+	  -->
+			<setting name="LanguageFieldFallback.AllowVaryFallbackSettingsPerLanguage">
+				<patch:attribute name="value">false</patch:attribute>
+			</setting>
+
+			<!--By default, Media items are not versionable and the below setting is set to false in the web.config.  
+		If you upload an image in one language, it will persist across all language versions.
+		If you change this to true, then versioning will apply and you would have to set the media item into all language versions, 
+		or enable fallback, but if enforce version presence is turned on and media template guids are included in EnforceVersionPresenceTemplates, 
+		then you'll have to make sure all language versions at least exist-->
+			<setting name="Media.UploadAsVersionableByDefault">
+				<patch:attribute name="value">true</patch:attribute>
+			</setting>
+
+			<!--Affects how cross-site links are rendered when Rendering.SiteResolving is enabled.
+			If true, the link provider will take the language attribute of the site definitions into consideration when resolving
+			which site/hostname to use when rendering a cross-site link.
+			However if you have more than one language valid for the same site, 
+			it seems for some of those languages (that are not the default for that site) 
+			to not be able to correctly identify the correct targetHostName-->
+			<setting name="Rendering.SiteResolvingMatchCurrentLanguage">
+				<patch:attribute name="value">false</patch:attribute>
+			</setting>
+
+
+
+
+			<!--OUR CUSTOM SETTINGS-->
+
+			<!--comma delimited list of fields that should be used to check if an item is falling back in the Language Fallback Report Tool-->
+			<setting name="Fallback.FieldToCheckForReporting" value="Headline,Sub Headline,Main Content,Teaser" />
+
+
+			<!-- Enable Fallback Buttons: Enforce Version Presence -->
+
+			<!--
+		Enable Fallback Buttons: RequiresAdministrator: Determines if the user needs to be a sitecore administrator to execute the commands.
+		Default: true
+	  -->
+			<setting name="Verndale.SharedSource.SitecoreCommands.Fallback.MultilingualTemplateCommand.RequiresAdministrator" value="true"/>
+
+
+			<!--
+		Enable Fallback Buttons: ItemNames.StandardValues: Gets the name of a standard values item.
+		Default: __Standard Values
+	  -->
+			<setting name="Verndale.SharedSource.SitecoreCommands.Fallback.MultilingualTemplateCommand.ItemNames.StandardValues" value="__Standard Values"/>
+
+
+			<!--
+		Enable Fallback Buttons: TemplateFieldID: Returns the ID of the item: /sitecore/templates/System/Templates/Template field
+		Default: {455A3E98-A627-4B40-8035-E683A0331AC7}
+	  -->
+			<setting name="Verndale.SharedSource.SitecoreCommands.Fallback.MultilingualTemplateCommand.TemplateIDs.Template" value="{455A3E98-A627-4B40-8035-E683A0331AC7}"/>
+
+			<!--
+		Enable Fallback Buttons: EnableSharedLanguageFallbackID: returns the of the item: /sitecore/templates/System/Templates/Template field/Data/Enable Shared Language Fallback
+		Default: {24CB32F0-E364-4F37-B400-0F2899097B5B}
+	  -->
+			<setting name="Verndale.SharedSource.SitecoreCommands.Fallback.MultilingualTemplateCommand.TemplateFieldIds.EnableSharedLanguageFallback" value="{24CB32F0-E364-4F37-B400-0F2899097B5B}"/>
+
+
+			<!--
+		Enable Fallback Buttons: EnableItemFallback: returns the ID of the Item: /sitecore/templates/System/Templates/Sections/Advanced/Advanced/__Enable item fallback
+		Default: {FD4E2050-186C-4375-8B99-E8A85DD7436E}
+	  -->
+			<setting name="Verndale.SharedSource.SitecoreCommands.Fallback.MultilingualTemplateCommand.TemplateFieldIds.EnableItemFallback" value="{FD4E2050-186C-4375-8B99-E8A85DD7436E}"/>
+
+
+			<!--
+		Enable Fallback Buttons: Enforce version presence: returns the ID of the item: /sitecore/templates/System/Templates/Sections/Advanced/Advanced/__Enforce version presence
+	  -->
+			<setting name="Verndale.SharedSource.SitecoreCommands.Fallback.MultilingualTemplateCommand.TemplateFieldIds.EnforceVersionPresence" value="{61CF7151-0CBD-4DB4-9738-D753A55A6E65}"/>
+
+
+
+		</settings>
+
+		<commands>
+			<!--<command name="flp:setupfallback" type="Sitecore.SharedSource.PartialLanguageFallback.Commands.SetupFallbackCommand,Sitecore.SharedSource.PartialLanguageFallback" />-->
+			<command name="item:addversiontoalllanguages" type="Verndale.SharedSource.SitecoreCommands.CreateVersionInAllLanguages,Verndale.LanguageEnhancements" />
+
+
+			<!-- Enable Fallback Buttons: ItemFallback -->
+			<command name="languagefallback:CheckEnableItemLanguageFallback"
+					 type="Verndale.SharedSource.SitecoreCommands.Fallback.EnableItemLanguageFallbackCommand, Verndale.LanguageEnhancements"/>
+
+			<command name="languagefallback:UncheckEnableItemLanguageFallback"
+						   type="Verndale.SharedSource.SitecoreCommands.Fallback.DisableItemLanguageFallbackCommand, Verndale.LanguageEnhancements"/>
+
+			<!-- Enable Fallback Buttons: FieldLevelFallback -->
+			<command name="languagefallback:CheckEnableFieldLevelFallback"
+					 type="Verndale.SharedSource.SitecoreCommands.Fallback.EnableFieldLevelFallbackCommand, Verndale.LanguageEnhancements"/>
+
+			<command name="languagefallback:UncheckEnableFieldLevelFallback"
+					type="Verndale.SharedSource.SitecoreCommands.Fallback.DisableFieldLevelFallbackCommand, Verndale.LanguageEnhancements"/>
+
+
+			<!-- Enable Fallback Buttons: Enforce Version Presence -->
+			<command name="languagefallback:CheckEnforceVersionPresence"
+					 type="Verndale.SharedSource.SitecoreCommands.Fallback.EnableEnforceVersionPresenceCommand, Verndale.LanguageEnhancements"/>
+
+			<command name="languagefallback:UncheckEnforceVersionPresence"
+					 type="Verndale.SharedSource.SitecoreCommands.Fallback.DisableEnforceVersionPresenceCommand, Verndale.LanguageEnhancements"/>
+
+		</commands>
+
+
+	</sitecore>
+
+</configuration>
+

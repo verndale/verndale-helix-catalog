@@ -75,6 +75,9 @@ namespace Verndale.Feature.Redirects
 		/// <param name="oldItem">Old Item</param>
 		/// <param name="newItem">New Item</param>
 		/// <param name="updateType">Update type</param>
+		///
+		///
+		// TODO: Replace this with a Rule Action
 		private void UpdateUrlRedirect(Item oldItem, Item newItem, EventType updateType)
 		{
 

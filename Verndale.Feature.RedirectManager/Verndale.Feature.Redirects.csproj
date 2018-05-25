@@ -98,7 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="App_Config\Include\Feature\Verndale.Feature.Redirects.config.example" />
+    <None Include="App_Config\Include\Verndale\Verndale.Feature.Redirects.config.example" />
     <None Include="Verndale.Feature.Redirects.nuspec" />
     <None Include="Installation-Packages\Verndale-Feature-Redirects-9.0.1.zip" />
     <None Include="packages.config" />

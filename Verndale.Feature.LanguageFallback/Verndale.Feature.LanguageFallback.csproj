@@ -99,9 +99,8 @@
     <Compile Include="Commands\MultilingualTemplateCommand.cs" />
     <Compile Include="Controllers\AlternateLanguageLinksController.cs" />
     <Compile Include="EventHandlers\CreateVersionInAllLanguagesOnCreate.cs" />
-    <Compile Include="InternationalizationHelper.cs" />
     <Compile Include="ItemExtensions.cs" />
-    <Compile Include="Pipelines\HttpRequest\CanonicalLanguageResolver.cs" />
+    <Compile Include="Pipelines\HttpRequest\DefaultSiteLanguageResolver.cs" />
     <Compile Include="Pipelines\HttpRequest\CultureResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="sitecore modules\Web\LanguageTools\Language Fallback Report.aspx.cs">

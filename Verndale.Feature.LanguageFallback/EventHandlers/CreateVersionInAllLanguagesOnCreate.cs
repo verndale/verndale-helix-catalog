@@ -64,7 +64,9 @@ namespace Verndale.Feature.LanguageFallback.EventHandlers
 
 			var createdArgs = Event.ExtractParameter(args, 0) as ItemCreatedEventArgs;
 			if (createdArgs == null)
+			{
 				return;
+			}
 
 			var item = createdArgs.Item;
 
@@ -79,7 +81,7 @@ namespace Verndale.Feature.LanguageFallback.EventHandlers
 					{
 						if (item.Paths.FullPath.ToLower().Contains(path.ToLower()))
 						{
-							LanguageHelper.CreateVersionInEachLanguage(item);
+							item.CreateVersionForEachSupportedSiteLanguage();
 							break;
 						}
 					}

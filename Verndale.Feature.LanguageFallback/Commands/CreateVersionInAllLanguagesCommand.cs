@@ -45,7 +45,7 @@ namespace Verndale.Feature.LanguageFallback.Commands
 				{
 					if (args.Result == "yes")
 					{
-						LanguageHelper.CreateVersionInEachLanguage(item);
+						item.CreateVersionForEachSupportedSiteLanguage();
 
 						Sitecore.Web.UI.HtmlControls.DataContext contentEditorDataContext = Sitecore.Context.ClientPage.FindControl("ContentEditorDataContext") as Sitecore.Web.UI.HtmlControls.DataContext;
 						contentEditorDataContext.SetFolder(item.Uri);

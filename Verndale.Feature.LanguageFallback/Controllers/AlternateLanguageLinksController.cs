@@ -1,6 +1,6 @@
-﻿using System.Linq;
+﻿using System.Text;
 using System.Web.Mvc;
-using Sitecore.Globalization;
+using Constellation.Foundation.Data;
 using Sitecore.Links;
 using Sitecore.Mvc.Presentation;
 
@@ -10,43 +10,27 @@ namespace Verndale.Feature.LanguageFallback.Controllers
 	{
 		public ActionResult Index()
 		{
-			var thisItem = RenderingContext.Current.ContextItem;
+			var item = RenderingContext.Current.ContextItem;
 
-			//TODO: get the Item's site, get the languages, create the language links.
+			var site = item.GetSite();
 
+			var content = new StringBuilder();
 
-			if (thisItem != null && sites.Any())
+			foreach (var language in site.GetSupportedLanguages())
 			{
-				string url = LinkManager.GetItemUrl(thisItem);
-				if (Sitecore.Context.Language != null)
+				if (item.Language == language)
 				{
-					var langCode = Sitecore.Context.Language.ToString().ToLower();
-					url = url.Replace("/" + langCode, "");
+					continue;
 				}
-				foreach (Language itemVersion in thisItem.Languages)
-				{
-					var thisLangCode = itemVersion.Name.ToLower();
 
-					var matchingSite =
-						sites.Where(
-								x =>
-									x.Properties["startItem"] == thisSite.Properties["startItem"] &&
-									x.Properties["mappedLanguages"].HasValue() &&
-									x.Properties["mappedLanguages"].ToLower().Split('|').Any(y => y.Equals(thisLangCode)))
-							.FirstOrDefault();
+				var alternateItem = item.Database.GetItem(item.ID, language);
+				var options = LinkManager.GetDefaultUrlOptions();
+				options.LanguageEmbedding = LanguageEmbedding.Always;
 
-					if (matchingSite != null)
-					{
-						if (matchingSite.Properties["targetHostName"].HasValue())
-						{
-							targetHostName = matchingSite.Properties["targetHostName"];
-							var fullUrl = "http://" + targetHostName + "/" + thisLangCode + url;
-							alternateLinkOutputStr.AppendLine("<link rel=\"alternate\" hreflang=\"" + thisLangCode +
-															  "\" href=\"" + fullUrl + "\" />");
-						}
-					}
-				}
+				content.AppendLine($"<link rel=\"alternate\" hreflang=\"{LinkManager.GetItemUrl(alternateItem, options)}\" />");
 			}
+
+			return Content(content.ToString());
 		}
 	}
 }

@@ -97,6 +97,7 @@
     <None Include="App_Config\Include\Verndale\Verndale.Feature.LangaugeFallback.config.example" />
     <Content Include="App_Data\packages\Verndale-Feature-LanguageFallback-9.0.1.zip" />
     <None Include="packages.config" />
+    <None Include="Verndale.Feature.LanguageFallback.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Verndale.License.txt" />

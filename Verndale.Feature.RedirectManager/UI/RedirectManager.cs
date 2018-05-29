@@ -17,7 +17,7 @@ using Sitecore.Web.UI.XamlSharp.Ajax;
 using Verndale.Feature.Redirects.Data;
 using Page = System.Web.UI.Page;
 
-namespace Verndale.Feature.Redirects
+namespace Verndale.Feature.Redirects.UI
 {
 	public partial class RedirectManager : Page, IHasCommandContext
 	{

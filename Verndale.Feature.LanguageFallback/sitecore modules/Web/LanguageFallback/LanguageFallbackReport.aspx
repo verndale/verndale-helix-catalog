@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Language Fallback Report.aspx.cs" Inherits="sitecore_modules.Web.LanguageTools.Language_Fallback_Report" %>
+﻿<%@ Page Language="C#" Inherits="Verndale.Feature.LanguageFallback.UI.LanguageFallbackReport" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">

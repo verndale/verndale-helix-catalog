@@ -418,29 +418,29 @@ a:visited {
 .expanded-language{background: url(images/icon-topic-green-collapse-arrow.png) no-repeat; width:10px;  height:10px; display:inline-block; cursor:pointer; vertical-align:middle; padding-right:5px;}
 
 .icon-expand-all{
-    background-image: url("images/icon-panel-open.png");
-    background-position: 12% 45%;
-    background-repeat: no-repeat;
+	background-image: url("images/icon-panel-open.png");
+	background-position: 12% 45%;
+	background-repeat: no-repeat;
 
-    color: #4A4A4A;
-    cursor: pointer;
-    float: right;
-    font-weight: bold;
-    padding: 0px 15px 0 30px;
-    text-align: center;
-    text-shadow: 0.1em 0.1em #EBEBEB;}
+	color: #4A4A4A;
+	cursor: pointer;
+	float: right;
+	font-weight: bold;
+	padding: 0px 15px 0 30px;
+	text-align: center;
+	text-shadow: 0.1em 0.1em #EBEBEB;}
 
 .icon-expand-all.expandedAll{ background-image: url("images/icon-panel-close.png");
-    background-position: 12% 45%;
-    background-repeat: no-repeat;
+	background-position: 12% 45%;
+	background-repeat: no-repeat;
 
-    color: #4A4A4A;
-    cursor: pointer;
-    float: right;
-    font-weight: bold;
-    padding: 0px 15px 0 30px;
-    text-align: center;
-    text-shadow: 0.1em 0.1em #EBEBEB;}
+	color: #4A4A4A;
+	cursor: pointer;
+	float: right;
+	font-weight: bold;
+	padding: 0px 15px 0 30px;
+	text-align: center;
+	text-shadow: 0.1em 0.1em #EBEBEB;}
 .fallback-report-listing{margin:15px 0;}
 .fallback-report-listing ul li {line-height:28px;}
 

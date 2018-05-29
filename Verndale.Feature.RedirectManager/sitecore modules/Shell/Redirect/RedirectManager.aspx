@@ -1,5 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="~/RedirectManager.cs"
-	Inherits="Verndale.Feature.Redirects.RedirectManager" %>
+﻿<%@ Page Language="C#" Inherits="Verndale.Feature.Redirects.UI.RedirectManager" %>
 
 <%@ Register Assembly="Sitecore.Kernel" Namespace="Sitecore.Web.UI.HtmlControls" TagPrefix="sc" %>
 <%@ Register Assembly="Sitecore.Kernel" Namespace="Sitecore.Web.UI.WebControls" TagPrefix="sc" %>

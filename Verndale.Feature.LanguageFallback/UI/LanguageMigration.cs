@@ -10,10 +10,9 @@ using Sitecore.Diagnostics;
 using Sitecore.Globalization;
 using Sitecore.Jobs;
 using Sitecore.StringExtensions;
-using Verndale.Feature.LanguageFallback;
 using Version = Sitecore.Data.Version;
 
-namespace sitecore_modules.Web.LanguageTools
+namespace Verndale.Feature.LanguageFallback.UI
 {
 	public partial class LanguageMigration : System.Web.UI.Page
 	{
@@ -23,7 +22,7 @@ namespace sitecore_modules.Web.LanguageTools
 			{
 				// append the path entered by the user to /sitecore and get the item to start the migration with
 				var root = txtItemPath.Text;
-				return root.IsNullOrEmpty() ? null : CurrentDatabase.GetItem("/sitecore" + root);
+				return StringExtensions.IsNullOrEmpty(root) ? null : CurrentDatabase.GetItem("/sitecore" + root);
 			}
 		}
 
@@ -74,7 +73,7 @@ namespace sitecore_modules.Web.LanguageTools
 		protected Database CurrentDatabase
 		{
 			// sets to either the selected database or 'master' if none
-			get { return Factory.GetDatabase(ddlDatabase.SelectedValue.IsNullOrEmpty() ? "master" : ddlDatabase.SelectedValue); }
+			get { return Factory.GetDatabase(StringExtensions.IsNullOrEmpty(ddlDatabase.SelectedValue) ? "master" : ddlDatabase.SelectedValue); }
 		}
 
 		protected Language SourceLanguage
@@ -84,7 +83,7 @@ namespace sitecore_modules.Web.LanguageTools
 				var selectedLanguage = ddlSourceLanguage.SelectedValue;
 				Language sourceLanguage;
 
-				if (!selectedLanguage.IsNullOrEmpty() &&
+				if (!StringExtensions.IsNullOrEmpty(selectedLanguage) &&
 					Language.TryParse(selectedLanguage, out sourceLanguage))
 				{
 					return sourceLanguage;
@@ -101,7 +100,7 @@ namespace sitecore_modules.Web.LanguageTools
 				var selectedLanguage = ddlTargetLanguage.SelectedValue;
 				Language targetLanguage;
 
-				if (!selectedLanguage.IsNullOrEmpty() &&
+				if (!StringExtensions.IsNullOrEmpty(selectedLanguage) &&
 					Language.TryParse(selectedLanguage, out targetLanguage))
 				{
 					return targetLanguage;

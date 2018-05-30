@@ -36,6 +36,9 @@
     <Reference Include="Constellation.Foundation.Data, Version=9.0.4.26199, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Constellation.Foundation.Data.9.0.4.26199\lib\net462\Constellation.Foundation.Data.dll</HintPath>
     </Reference>
+    <Reference Include="Constellation.Foundation.PackageVerification, Version=9.0.1.29093, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Constellation.Foundation.PackageVerification.9.0.1.29093\lib\net462\Constellation.Foundation.PackageVerification.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
@@ -95,11 +98,13 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="App_Config\Include\Verndale\Verndale.Feature.LangaugeFallback.config.example" />
+    <Content Include="App_Data\packages\PutPackagesHere.txt" />
     <Content Include="App_Data\packages\Verndale-Feature-LanguageFallback-9.0.1.zip" />
     <None Include="packages.config" />
     <None Include="Verndale.Feature.LanguageFallback.nuspec" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Constellation.License.txt" />
     <Content Include="Verndale.License.txt" />
     <Content Include="sitecore modules\Web\LanguageFallback\images\ajax-loader.gif" />
     <Content Include="sitecore modules\Web\LanguageFallback\images\icon-panel-close.png" />

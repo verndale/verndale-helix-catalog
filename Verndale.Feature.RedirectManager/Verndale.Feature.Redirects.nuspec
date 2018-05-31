@@ -6,11 +6,11 @@
 	<title>$title$</title>
 	<authors>Liz Spranzani, Richard J. Cabral, Deepthi Katta</authors>
 	<owners>Verndale</owners>
-	<projectUrl>https://github.com/sitecorerick/constellation-sitecore9</projectUrl>
+	<projectUrl>https://github.com/Verndale-Corp/verndale-helix-catalog</projectUrl>
 	<requireLicenseAcceptance>false</requireLicenseAcceptance>
-	<summary>Sitecore Helix library for building out static navigation that doesn't necessarily reflect the shape or names of Items in the content tree.</summary>
+	<summary>Sitecore Helix library for making URL Redirects easy to maintain within Sitecore.</summary>
 	<description>
-Verndale Feature is a collection of utilities for the Sitecore .NET CMS.
+Verndale Helix Catalog is a collection of utilities for the Sitecore .NET CMS.
 The Feature.Redirects library solves the frequently occurring problem of managing a collection of urls that must be redirected to other urls. Current solutions involve
 IIS URL Rewrite module, which is not author-friendly, and using Sitecore Aliases, which is not scalable. This package uses a very small custom database to maintain
 the list of rewrite rules. The application is accessed from within the Sitcore desktop and uses Sitecore's native Sheer UI components.
@@ -19,12 +19,11 @@ Installation
 1. Add this NuGet package to your Sitecore solution
 2. Remove the .example suffix from /App_Config/Include/Feature/Verndale.Feature.Redirects.config.example to enable the application.
 2. Build and Deploy your solution to a target environment
-3. Install the matching Sitecore Package located in /Installation-Packages shipped with this application onto your target environment.
-4. Restart your Sitecore Server and Client. 
 
 Usage Details
 Configure for use only on the sites that need it by adding sites to the ignored sites list on the pipeline handler configuration.
 
+This library requires a Sitecore Package (included). The package should install automatically when you build and deploy your project.
 
 Configured for use with Sitecore 9.0.
 Requires Sitecore 9.0 NuGet packages, available here: https://sitecore.myget.org/F/sc-packages/api/v3/index.json

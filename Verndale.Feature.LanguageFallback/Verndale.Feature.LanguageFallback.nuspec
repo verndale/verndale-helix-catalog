@@ -4,13 +4,13 @@
 	<id>$id$</id>
 	<version>$version$</version>
 	<title>$title$</title>
-	<authors>Liz Spranzani, Richard J. Cabral, Deepthi Katta</authors>
+	<authors>Steven Striga, Liz Spranzani, Richard J. Cabral, Deepthi Katta</authors>
 	<owners>Verndale</owners>
-	<projectUrl>TBD</projectUrl>
+	<projectUrl>https://github.com/Verndale-Corp/verndale-helix-catalog</projectUrl>
 	<requireLicenseAcceptance>false</requireLicenseAcceptance>
-	<summary>Sitecore Helix library for building out static navigation that doesn't necessarily reflect the shape or names of Items in the content tree.</summary>
+	<summary>Sitecore Helix library to extend Sitecore's Language Fallback feature.</summary>
 	<description>
-Verndale Feature is a collection of utilities for the Sitecore .NET CMS.
+Verndale Helix Catalog is a collection of utilities for the Sitecore .NET CMS.
 The Feature.LanguageFallback library contains a number of user efficiency enhancements for Sitecore's Language Fallback feature.
 		
 * Language Fallback Report allows you to see which Items are falling back to which languages.
@@ -22,6 +22,8 @@ The Feature.LanguageFallback library contains a number of user efficiency enhanc
 * The Developer Ribbon supports controls that allow the user to quickly manage Language Fallback on an entire branch of the content tree as well as enforce the
 		creation of alternate language versions.
 
+		
+This library requires the installation of a Sitecore Package (included). This should happen automatically when you build and deploy your project.
 
 Configured for use with Sitecore 9.0.
 Requires Sitecore 9.0 NuGet packages, available here: https://sitecore.myget.org/F/sc-packages/api/v3/index.json

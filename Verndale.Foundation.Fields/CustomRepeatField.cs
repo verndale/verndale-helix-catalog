@@ -35,9 +35,7 @@ namespace Verndale.Foundation.Fields
 	public class CustomRepeatField : Input
 	{
 		/// <summary>The item version.</summary>
-		private string itemVersion;
-
-		private bool linkBroken;
+		private string _itemVersion;
 
 		/// <summary>
 		/// Regex used to separate from: 'FieldOne' to 'Field One'
@@ -899,46 +897,9 @@ namespace Verndale.Foundation.Fields
 			}
 		}
 
-		/// <summary>Loads the post data.</summary>
-		/// <param name="value">The value.</param>
-		/// <param name="linkXml"></param>
-		/// <returns>Boolean value indicating whether post data has been loaded successfully.</returns>
-		/// <summary>
-		/// Get the link link path of link (represented by XmlValue).
-		/// </summary>
-		/// <returns>Path for the item</returns>
-		//private string GetLinkPath()
-		//{
-		//    XmlValue xmlValue = this.XmlValue;
-		//    string attribute = xmlValue.GetAttribute("id");
-		//    string str = string.Empty;
-		//    Item obj = (Item)null;
-		//    if (!string.IsNullOrEmpty(attribute))
-		//        obj = Client.ContentDatabase.GetItem(new ID(attribute));
-		//    if (obj != null)
-		//    {
-		//        if (this.Value.EndsWith("." + "aspx"))
-		//        {
-		//            if (obj.Paths.Path.StartsWith("/sitecore/content", StringComparison.InvariantCulture))
-		//            {
-		//                str = obj.Paths.Path.Substring("/sitecore/content".Length);
-		//                if (LinkManager.AddAspxExtension)
-		//                    str += "." + "aspx";
-		//            }
-		//            else if (obj.Paths.Path.StartsWith("/sitecore/media library", StringComparison.InvariantCulture))
-		//                str = obj.Paths.Path + ("." + "aspx");
-		//        }
-		//        else if (obj.Paths.Path.StartsWith("/sitecore/media library", StringComparison.InvariantCulture))
-		//            str = obj.Paths.Path.Substring("/sitecore/media library".Length);
-		//    }
-		//    else
-		//        str = xmlValue.GetAttribute("url");
-		//    return str;
-		//}
 		private string SetLinkValue(string linkXml)
 		{
 			string str1 = "";
-			this.linkBroken = false;
 
 			if (string.IsNullOrEmpty(linkXml)) return string.Empty;
 
@@ -966,7 +927,6 @@ namespace Verndale.Foundation.Fields
 							Item obj = Client.ContentDatabase.GetItem(new ID(attribute2));
 							if (obj == null)
 							{
-								this.linkBroken = true;
 								str1 = attribute2;
 								break;
 							}
@@ -986,7 +946,6 @@ namespace Verndale.Foundation.Fields
 							Item obj = Client.ContentDatabase.GetItem(new ID(attribute3));
 							if (obj == null)
 							{
-								this.linkBroken = true;
 								str1 = attribute3;
 								break;
 							}
@@ -1399,7 +1358,7 @@ namespace Verndale.Foundation.Fields
 				var xElement = XElement.Parse(xml);
 				return true;
 			}
-			catch (XmlException e)
+			catch (XmlException)
 			{
 				return false;
 			}
@@ -1498,12 +1457,12 @@ namespace Verndale.Foundation.Fields
 		{
 			get
 			{
-				return this.itemVersion;
+				return this._itemVersion;
 			}
 			set
 			{
 				Assert.ArgumentNotNull(value, nameof(value));
-				this.itemVersion = value;
+				this._itemVersion = value;
 			}
 		}
 

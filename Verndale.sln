@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Verndale.Foundation.Fields"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Verndale.Feature.Redirects", "Verndale.Feature.Redirects\Verndale.Feature.Redirects.csproj", "{D145E7BA-CD40-4F0E-B93E-EB7668753FE5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Verndale.Foundation.Linking", "Verndale.Foundation.Linking\Verndale.Foundation.Linking.csproj", "{E70C06FB-A556-4D6D-974E-949A0C3A770E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{D145E7BA-CD40-4F0E-B93E-EB7668753FE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D145E7BA-CD40-4F0E-B93E-EB7668753FE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D145E7BA-CD40-4F0E-B93E-EB7668753FE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E70C06FB-A556-4D6D-974E-949A0C3A770E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E70C06FB-A556-4D6D-974E-949A0C3A770E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E70C06FB-A556-4D6D-974E-949A0C3A770E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E70C06FB-A556-4D6D-974E-949A0C3A770E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,6 +45,7 @@ Global
 		{465DBB69-7CDE-4E6A-B643-3FDDC0B17B8F} = {24DDFB1A-76D3-4D77-BABE-57CC332939B2}
 		{BC2E470F-6922-45AF-91BE-9220A26719EE} = {5FEB4532-F049-4F37-B3C0-FAB3B9932CA7}
 		{D145E7BA-CD40-4F0E-B93E-EB7668753FE5} = {24DDFB1A-76D3-4D77-BABE-57CC332939B2}
+		{E70C06FB-A556-4D6D-974E-949A0C3A770E} = {5FEB4532-F049-4F37-B3C0-FAB3B9932CA7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {311D3492-BD55-4691-A5A1-3E070792EA59}

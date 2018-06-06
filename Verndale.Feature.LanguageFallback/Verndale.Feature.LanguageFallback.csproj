@@ -30,9 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Constellation.Foundation.Contexts, Version=9.0.1.19229, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Constellation.Foundation.Contexts.9.0.1.19229\lib\net462\Constellation.Foundation.Contexts.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Constellation.Foundation.Contexts, Version=9.0.2.26264, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Constellation.Foundation.Contexts.9.0.2.26264\lib\net462\Constellation.Foundation.Contexts.dll</HintPath>
     </Reference>
     <Reference Include="Constellation.Foundation.Data, Version=9.0.4.26199, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Constellation.Foundation.Data.9.0.4.26199\lib\net462\Constellation.Foundation.Data.dll</HintPath>
@@ -90,6 +89,9 @@
     <Reference Include="Verndale.Foundation.Linking, Version=9.0.1.23791, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Verndale.Foundation.Linking.9.0.1.23791\lib\net462\Verndale.Foundation.Linking.dll</HintPath>
     </Reference>
+    <Reference Include="Verndale.Foundation.PageNotFound, Version=9.0.3.25579, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Verndale.Foundation.PageNotFound.9.0.3.25579\lib\net462\Verndale.Foundation.PageNotFound.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CreateVersionInAllLanguagesCommand.cs" />
@@ -103,7 +105,7 @@
     <Compile Include="Controllers\AlternateLanguageLinksController.cs" />
     <Compile Include="EventHandlers\CreateVersionInAllLanguagesOnCreate.cs" />
     <Compile Include="ItemExtensions.cs" />
-    <Compile Include="Links\SupportedLanguagesLinkProvider.cs" />
+    <Compile Include="Links\SelectiveLanguageEmbedLinkProvider.cs" />
     <Compile Include="Pipelines\HttpRequest\DefaultSiteLanguageResolver.cs" />
     <Compile Include="Pipelines\HttpRequest\CultureResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -118,17 +120,20 @@
     <Compile Include="SiteInfoExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Constellation.License.txt" />
+    <Content Include="Verndale.License.txt" />
     <None Include="app.config" />
-    <None Include="App_Config\Include\Verndale\Verndale.Feature.LangaugeFallback.config.example" />
+    <Content Include="App_Config\Include\Verndale\Verndale.Feature.LangaugeFallback.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\packages\PutPackagesHere.txt" />
-    <Content Include="App_Data\packages\Verndale-Feature-LanguageFallback-9.0.1.zip" />
-    <None Include="App_Config\Include\Verndale\Verndale.Foundation.Linking.config" />
+    <Content Include="App_Config\Include\Verndale\Verndale.Foundation.Linking.config" />
+    <Content Include="App_Config\Include\Verndale\Verndale.Foundation.PageNotFound.config" />
+    <None Include="App_Data\packages\Verndale-Feature-LanguageFallback-9.0.1.zip" />
     <None Include="packages.config" />
     <None Include="Verndale.Feature.LanguageFallback.nuspec" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Constellation.License.txt" />
-    <Content Include="Verndale.License.txt" />
     <Content Include="sitecore modules\Web\LanguageFallback\images\ajax-loader.gif" />
     <Content Include="sitecore modules\Web\LanguageFallback\images\icon-panel-close.png" />
     <Content Include="sitecore modules\Web\LanguageFallback\images\icon-panel-open.png" />

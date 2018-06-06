@@ -1,0 +1,59 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+	<id>$id$</id>
+	<version>$version$</version>
+	<title>$title$</title>
+	<authors>Richard J. Cabral</authors>
+	<owners>Verndale</owners>
+	<projectUrl>https://github.com/Verndale-Corp/verndale-helix-catalog</projectUrl>
+	<requireLicenseAcceptance>false</requireLicenseAcceptance>
+	<summary>Sitecore Helix library for managing site-specific 404 pages.</summary>
+	<description>
+Verndale Helix Catalog is a collection of utilities for the Sitecore .NET CMS.
+The Foundation.PageNotFound library centralizes control of 404 pages and the process of redirecting to those 404 pages.
+
+Installation
+1. Add this NuGet package to your Sitecore solution
+2. Build and Deploy your solution to a target environment
+
+Package Includes:
+
+
+Custom Site Attribute: notFoundPageID
+
+This attribute should be set to the ID of the Item to use for presenting 404 Response Status messages to the visitor.
+Each site requires its own 404 page Item. The Item must also contain a rendering or reference to the
+Verndale.Foundation.PageNotFound.Controllers.NotFoundStatusCodeController which will set the Not Found
+status in the Response. If you don't do this, the Browser will receive a 200 response code.
+
+
+HttpRequestBegin Pipeline Processor: Page Not Found Resolver
+
+Assuming the site is configured with the ID of the "not found page" this processor will resolve the context item
+to that specific item if the context item is currently null.
+
+This processor must run after all Site, Database, Language, and Item resolvers, but before Device and Layout resolvers.
+The supplied patch:before is a safe bet, but may need to be changed depending on your solution.
+
+Please note that this processor will only run for databases and sites as configured, and should intentionally not
+run for Sitecore system sites.
+
+
+
+HttpRequestEnd Pipeline Processor: Set404StatusCode
+
+Assuming the site is configured with the ID of the "not found page" this processor will detect that the context item
+is the 404 page and will add the 404 code to the Response.
+
+Please note that the customizations in this processor will only run for databases and sites as configured below, and should intentionally not
+run for Sitecore system sites. (see sitesToIgnore below).
+
+Configured for use with Sitecore 9.0.
+Requires Sitecore 9.0 NuGet packages, available here: https://sitecore.myget.org/F/sc-packages/api/v3/index.json
+	</description>
+	<releaseNotes>Cut down on NuGet dependencies.</releaseNotes>
+	<copyright>Copyright 2018</copyright>
+	<tags>Sitecore, Sitecore Helix, Sitecore Habitat, Sitecore Feature</tags>
+  </metadata>
+</package>

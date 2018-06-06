@@ -12,24 +12,41 @@
 	<description>
 Verndale Helix Catalog is a collection of utilities for the Sitecore .NET CMS.
 The Feature.LanguageFallback library contains a number of user efficiency enhancements for Sitecore's Language Fallback feature.
-		
-* Language Fallback Report allows you to see which Items are falling back to which languages.
-* Language Migration allows you to migrate content from one database/language to another.
-* Culture Resolver, which is installed in the HttpRequestBeginPipeline ensures that your System CurrentCulture matches your Sitecore Language.
-* Default Site Language Resolver, also in the HttpRequestBeginPipeline changes Sitecore's default language resolution strategy such that URLs that do not contain
-		a language flag will be configured to serve the site's default language.
-* AlternateLanguageLinksController will populate your HTML Header with canonical (local) links for the current Item in all languages supported by the context site.
-* The Developer Ribbon supports controls that allow the user to quickly manage Language Fallback on an entire branch of the content tree as well as enforce the
-		creation of alternate language versions.
 
-		
+Language Fallback Report:
+Allows you to see which Items are falling back to which languages.
+
+
+Language Migration Tool:
+Allows you to migrate content from one database/language to another.
+
+
+Culture Resolver HttpRequest Pipeline Processor:
+HttpRequestBegin Pipeline processor that ensures that your System CurrentCulture matches your Sitecore Language.
+
+
+Default Site Language Resolver Pipeline Processor:
+HttpRequestBegin Pipeline processor that changes Sitecore's default language resolution strategy such that URLs that do not contain
+a language flag will be configured to serve the site's default language.
+
+
+AlternateLanguageLinksController: 
+Will populate your HTML Header with canonical (local) links for the current Item in all languages supported by the context site.
+
+Language Fallback Commands:
+Installed in the Ribbon area of the Content Editor:
+* Create Version in All Languages - ensures an Item has a Version in each of it's Site's supported languages.
+* Enable/Disable Enforce Version Presence - turns this feature on or off for the selected Template or Templates.
+* Enable/Disable Language Fallback - turns this feature on or off for the selected Template or Templates.
+* Enable/Disable Field Level Fallback - turns this feature on or off for the selected Template fields.
+
+
 This library requires the installation of a Sitecore Package (included). This should happen automatically when you build and deploy your project.
 
 Configured for use with Sitecore 9.0.
 Requires Sitecore 9.0 NuGet packages, available here: https://sitecore.myget.org/F/sc-packages/api/v3/index.json
-Requires the installation of the included Package.
 	</description>
-	<releaseNotes>Initial release!</releaseNotes>
+	<releaseNotes>Simplified configuration file. Added better 404 support.</releaseNotes>
 	<copyright>Copyright 2018</copyright>
 	<tags>Sitecore, Sitecore Helix, Sitecore Habitat, Sitecore Feature</tags>
   </metadata>

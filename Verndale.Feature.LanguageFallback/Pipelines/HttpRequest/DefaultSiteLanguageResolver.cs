@@ -1,12 +1,11 @@
 ﻿using System.Web;
 using Constellation.Foundation.Contexts.Pipelines;
-using Sitecore.Data;
-using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Sitecore.Globalization;
 using Sitecore.Links;
 using Sitecore.Pipelines.HttpRequest;
 using Sitecore.Web;
+using Verndale.Foundation.PageNotFound.Repositories;
 
 namespace Verndale.Feature.LanguageFallback.Pipelines.HttpRequest
 {
@@ -42,13 +41,21 @@ namespace Verndale.Feature.LanguageFallback.Pipelines.HttpRequest
 				// Language is not supported. We need to 404.
 				SetLanguageToDefaultForSite(); // This ensures the generated link has the right language.
 
-				var target = Get404Item();
+				var target = PageNotFoundRepository.GetPageNotFoundItem(Sitecore.Context.Site, Sitecore.Context.Language, Sitecore.Context.Database);
 				var options = LinkManager.GetDefaultUrlOptions();
 				options.LanguageEmbedding = LanguageEmbedding.Always; // force the URL to switch language.
 
 				var url = LinkManager.GetItemUrl(target, options);
 
-				HttpContext.Current.Response.Redirect(url, true);
+				// Perform's a TransferRequest rather than a redirect.
+				if (Sitecore.Configuration.Settings.RequestErrors.UseServerSideRedirect)
+				{
+					HttpContext.Current.Server.TransferRequest(url);
+				}
+				else
+				{
+					WebUtil.Redirect(url, true);
+				}
 			}
 
 			// No valid language in the URL, therefore we can force the site's default language
@@ -123,28 +130,6 @@ namespace Verndale.Feature.LanguageFallback.Pipelines.HttpRequest
 
 			Log.Debug($"Verndale.Feature.LanguageFallback DefaultSiteLanguageResolver: Forcing language to {language.Name} for {HttpContext.Current.Request.Url.OriginalString}", this);
 			Sitecore.Context.Language = language;
-		}
-
-		private Item Get404Item()
-		{
-			var info = Sitecore.Context.Site.SiteInfo;
-
-			var id = ID.Parse(info.Properties["NotFoundPageID"]);
-
-			if (id.IsNull || id.IsGlobalNullId)
-			{
-				return null;
-			}
-
-			if (!info.EnforceVersionPresence)
-			{
-				return Sitecore.Context.Database.GetItem(id);
-			}
-
-			using (new EnforceVersionPresenceDisabler())
-			{
-				return Sitecore.Context.Database.GetItem(id);
-			}
 		}
 	}
 }

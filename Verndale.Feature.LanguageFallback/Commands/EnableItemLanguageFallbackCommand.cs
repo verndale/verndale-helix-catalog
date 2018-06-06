@@ -1,6 +1,5 @@
-﻿using System;
-using System.Linq;
-using Sitecore.Data.Items;
+﻿using Sitecore.Data.Items;
+using Sitecore.Data.Query;
 
 namespace Verndale.Feature.LanguageFallback.Commands
 {
@@ -22,14 +21,14 @@ namespace Verndale.Feature.LanguageFallback.Commands
 		/// Custom Sitecore Content editor Command to automatically check the "Enable Language Fallback" field on Template items
 		/// on the selected item and all descendants.
 		/// </summary>
-		public override int Process(Item parentItem)
+		public override int Process(Item contextItem)
 		{
 			int count = 0;
 
 			// Process the parent item.
-			if (parentItem.Name.Equals(Configuration.ItemNames.StandardValues, StringComparison.InvariantCultureIgnoreCase))
+			if (contextItem.Template.StandardValues.ID == contextItem.ID)
 			{
-				bool valueChanged = SetCheckboxFieldValue(parentItem, Configuration.TemplateFieldIds.EnableItemFallback);
+				bool valueChanged = SetCheckboxFieldValue(contextItem, Sitecore.FieldIDs.EnableItemFallback);
 
 				if (valueChanged)
 				{
@@ -37,15 +36,19 @@ namespace Verndale.Feature.LanguageFallback.Commands
 				}
 			}
 
-			// Get all the standard value items
-			Item[] standardValueItems = parentItem.Axes.GetDescendants()
-				.Where(d => d.Name.Equals(Configuration.ItemNames.StandardValues, StringComparison.InvariantCultureIgnoreCase))
-				.OrderBy(o => o.Paths.FullPath)
-				.ToArray();
+			// Find any templates in this branch.
+			var templates = Query.SelectItems($".//*[@@templateid == \"{Sitecore.TemplateIDs.Template}]\"", contextItem);
 
-			foreach (Item standardValuesItem in standardValueItems)
+
+			// Update the standard values.
+			foreach (TemplateItem template in templates)
 			{
-				bool valueChanged = SetCheckboxFieldValue(standardValuesItem, Configuration.TemplateFieldIds.EnableItemFallback);
+				if (template.StandardValues == null)
+				{
+					continue;
+				}
+
+				bool valueChanged = SetCheckboxFieldValue(template.StandardValues, Sitecore.FieldIDs.EnableItemFallback);
 
 				if (valueChanged)
 				{

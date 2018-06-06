@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text;
 using System.Web.UI.WebControls;
-using Sitecore.Configuration;
 using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Data.Managers;
@@ -13,6 +12,9 @@ namespace Verndale.Feature.LanguageFallback.UI
 {
 	public partial class LanguageFallbackReport : System.Web.UI.Page
 	{
+		// ReSharper disable once InconsistentNaming
+		private static readonly ID FieldsToCheckSettingID = new ID("{3D2EC9DC-52EA-4355-97D1-34BBAD390E89}");
+
 		protected Item RootItem
 		{
 			get
@@ -26,7 +28,7 @@ namespace Verndale.Feature.LanguageFallback.UI
 		protected Database CurrentDatabase
 		{
 			// sets to either the selected database or 'master' if none
-			get { return Factory.GetDatabase(StringExtensions.IsNullOrEmpty(ddlDatabase.SelectedValue) ? "master" : ddlDatabase.SelectedValue); }
+			get { return Sitecore.Configuration.Factory.GetDatabase(StringExtensions.IsNullOrEmpty(ddlDatabase.SelectedValue) ? "master" : ddlDatabase.SelectedValue); }
 		}
 
 		private static String _fieldToCheckForReporting;
@@ -34,9 +36,14 @@ namespace Verndale.Feature.LanguageFallback.UI
 		{
 			get
 			{
-				// setting of the fields to check for Fallback, in the Sitecore.SharedSource.PartialLanguageFallback.config
 				if (_fieldToCheckForReporting == null)
-					_fieldToCheckForReporting = Settings.GetSetting("Fallback.FieldToCheckForReporting");
+				{
+					var database = Sitecore.Configuration.Factory.GetDatabase("master");
+
+					var setting = database.GetItem(FieldsToCheckSettingID);
+
+					_fieldToCheckForReporting = setting["Fields to Check for Reporting"];
+				}
 
 				return _fieldToCheckForReporting;
 			}
@@ -60,7 +67,7 @@ namespace Verndale.Feature.LanguageFallback.UI
 					return filteredLanguage;
 				}
 
-				return LanguageManager.GetLanguage(Settings.DefaultLanguage);
+				return LanguageManager.GetLanguage(Sitecore.Configuration.Settings.DefaultLanguage);
 			}
 		}
 
@@ -73,7 +80,7 @@ namespace Verndale.Feature.LanguageFallback.UI
 		{
 			if (!IsPostBack)
 			{
-				SetupLists();
+				BindControls();
 				// output the list of fields that will be used to test fallback, so the user knows what they are
 				// they are delimited by comma, so replace by comma space to make more user friendly
 				ltlFieldsToCheckForReporting.Text = FieldToCheckForReporting.Replace(",", ", ");
@@ -83,10 +90,11 @@ namespace Verndale.Feature.LanguageFallback.UI
 		}
 
 		// This function will bind "Database" and "Language" dropdowns...
-		protected void SetupLists()
+		protected void BindControls()
 		{
+			var names = Sitecore.Configuration.Factory.GetDatabaseNames();
 			// Binding Database names here, default master
-			foreach (var db in Factory.GetDatabaseNames())
+			foreach (var db in names)
 			{
 				ddlDatabase.Items.Add(new ListItem(db)
 				{
@@ -119,12 +127,11 @@ namespace Verndale.Feature.LanguageFallback.UI
 					var displayResults = new StringBuilder();
 					displayResults.AppendLine("<ul class=\"fallback-report\">");
 
-					bool doesQualify = false;
 					// get the results from GetResultDisplay, pass in the RootItem to start the report
 					// the out variable is more useful for the recursive calls within the method, 
 					// but basically it specifies if the item being passed in matches the filter criteria
-					var results = GetResultDisplay(RootItem, out doesQualify);
-					displayResults.Append(results.ToString());
+					var results = GetResultDisplay(RootItem, out _);
+					displayResults.Append(results);
 					displayResults.AppendLine("</ul>");
 
 					// output the stringbuilder results to a literal
@@ -182,15 +189,12 @@ namespace Verndale.Feature.LanguageFallback.UI
 			if (thisLanguageVersion != null && thisLanguageVersion.Versions.Count == 0)
 				thisLanguageVersion = null;
 
-			Language languageFallingBackTo = null;
-			var allSpecifiedFieldsAreFallingBack = true;
-
 			// GetLanguages gets back a string of language version that are applicable to the item
 			// it will call CheckIfFallingBack for each language including the Filtered Language version (if it exists)
 			// this method will check certain pre-defined fields on the item to see if values are set for them (FieldToCheckForReporting)
 			// if they are all null and the language is set to fallback, then this item, in the filtered language, is falling back
 			// it also gives back the language that it is falling back to
-			var languageDisplay = GetLanguages(startItem, thisLanguageVersion, out languageFallingBackTo, out allSpecifiedFieldsAreFallingBack);
+			var languageDisplay = GetLanguages(startItem, thisLanguageVersion, out _, out var allSpecifiedFieldsAreFallingBack);
 
 			var thisName = startItem.Name;
 			doesQualify = false;
@@ -219,11 +223,10 @@ namespace Verndale.Feature.LanguageFallback.UI
 			var atLeastOneChildQualifies = false;
 			foreach (Item childItem in childrenItems)
 			{
-				var childQualifies = false;
-				var thisChildResults = GetResultDisplay(childItem, out childQualifies);
+				var thisChildResults = GetResultDisplay(childItem, out var childQualifies);
 				if (childQualifies)
 					atLeastOneChildQualifies = true;
-				childResults.Append(thisChildResults.ToString());
+				childResults.Append(thisChildResults);
 			}
 
 			// if the user has selected to hide filtered content 
@@ -270,7 +273,7 @@ namespace Verndale.Feature.LanguageFallback.UI
 			return theseResults;
 		}
 
-		// Check if there are any values configured for this item in "Fallback.FieldToCheckForReporting", a Sitecore Setting in Fallback Config 
+		// Check if there are any values configured for this item in "Language Fallback Report.FieldToCheckForReporting", a Sitecore Setting in System/Settings 
 		// contains a comma delimited string of all the Fields that needs to be check to see if any of the field has it's own value.
 		// and if any of those fields has its own value, then language item is not falling back...
 		// this method will take in the language version of the item we are checking 
@@ -351,8 +354,7 @@ namespace Verndale.Feature.LanguageFallback.UI
 
 					// use the CheckIfFallingBack method again here to figured out if the language is falling back or not
 					// and if so, what language it is falling back to
-					var languageFallingBackTo = languageVersion.Language;
-					var allSpecifiedFieldsAreFallingBack = CheckIfFallingBack(languageVersion, out languageFallingBackTo);
+					var allSpecifiedFieldsAreFallingBack = CheckIfFallingBack(languageVersion, out var languageFallingBackTo);
 
 					// if there is a version of this item for the filtered language, 
 					// then set the out parameters of this method to the language the version is falling back to and if all fields are falling back

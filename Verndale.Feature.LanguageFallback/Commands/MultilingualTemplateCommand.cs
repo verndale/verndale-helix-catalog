@@ -126,14 +126,6 @@ namespace Verndale.Feature.LanguageFallback.Commands
 				return false;
 			}
 
-			// Validate that the user is a Sitecore administrator.
-			if (Configuration.RequiresAdminstrator && !Context.User.IsAdministrator)
-			{
-				message = "You must be an administrator to use this feature.";
-
-				return false;
-			}
-
 			// Ensure an item was selected.
 			if (item == null)
 			{
@@ -176,7 +168,7 @@ namespace Verndale.Feature.LanguageFallback.Commands
 
 			if (item == null)
 			{
-				Log.Warn("Verndale.SharedSource.SitecoreCommands.Fallback.EnableLanguageFallbackOnTemplateFields.SetFieldValue(): item is null, skipping...", this);
+				Log.Warn("Verndale.Feature.LanguageFallback.Commands.EnableLanguageFallbackOnTemplateFields.SetFieldValue(): item is null, skipping...", this);
 
 				return false;
 			}
@@ -186,9 +178,8 @@ namespace Verndale.Feature.LanguageFallback.Commands
 			if (field == null)
 			{
 				// Log that the field is missing on the item.
-				Log.Warn(string.Format("Verndale.SharedSource.SitecoreCommands.Fallback.EnableLanguageFallbackOnTemplateFields.SetFieldValue(): Item {0} field '{1}' is null. skipping...",
-					item.Paths.FullPath,
-					fieldId),
+				Log.Warn(
+					$"Verndale.Feature.LanguageFallback.Commands.EnableLanguageFallbackOnTemplateFields.SetFieldValue(): Item {item.Paths.FullPath} field '{fieldId}' is null. skipping...",
 				this);
 
 				return false;
@@ -199,11 +190,7 @@ namespace Verndale.Feature.LanguageFallback.Commands
 
 			// Log the changes.
 			Log.Info(
-				string.Format("Verndale.SharedSource.SitecoreCommands.Fallback.EnableLanguageFallbackOnTemplateFields.SetFieldValue(): Item {0}: Old value: '{1}'; New value: '{2}'; valueChanged: {3}",
-					item.Paths.FullPath,
-					field.Checked,
-					newCheckedValue,
-					valueChanged),
+				$"Verndale.Feature.LanguageFallback.Commands.EnableLanguageFallbackOnTemplateFields.SetFieldValue(): Item {item.Paths.FullPath}: Old value: '{field.Checked}'; New value: '{newCheckedValue}'; valueChanged: {valueChanged}",
 				this
 			);
 
@@ -226,9 +213,7 @@ namespace Verndale.Feature.LanguageFallback.Commands
 					catch (Exception ex)
 					{
 						// Log error to sitecore log.
-						Log.Error(string.Format("Verndale.SharedSource.SitecoreCommands.Fallback.EnableLanguageFallbackOnTemplateFields.SetFieldValue(): Item {0} ERROR: '{1}'",
-								item.Paths.FullPath,
-								ex.Message),
+						Log.Error($"Verndale.Feature.LanguageFallback.Commands.EnableLanguageFallbackOnTemplateFields.SetFieldValue(): Item {item.Paths.FullPath} ERROR: '{ex.Message}'",
 							ex,
 						this);
 					}
@@ -258,109 +243,7 @@ namespace Verndale.Feature.LanguageFallback.Commands
 				return "Processing completed. One (1) item was updated.";
 			}
 
-			return string.Format("Processing completed. {0:N0} items were updated.", changeCount);
-		}
-
-		#endregion
-
-		#region Configuration
-
-		/// <summary>
-		/// The configuration for the MultilingualTemplateCommands
-		/// </summary>
-		protected static class Configuration
-		{
-			/// <summary>
-			/// Determines if the user needs to be a sitecore administrator to execute the commands.
-			/// </summary>
-			public static bool RequiresAdminstrator
-			{
-				get
-				{
-					return Sitecore.Configuration.Settings.GetBoolSetting("Verndale.SharedSource.SitecoreCommands.Fallback.MultilingualTemplateCommand.RequiresAdministrator", true);
-				}
-			}
-
-			/// <summary>
-			/// The Item Name settings.
-			/// </summary>
-			public static class ItemNames
-			{
-				/// <summary>
-				/// Gets the name of the standard values item, e.g. "__Standard Values"
-				/// </summary>
-				public static string StandardValues
-				{
-					get
-					{
-						return Sitecore.Configuration.Settings.GetSetting("Verndale.SharedSource.SitecoreCommands.Fallback.MultilingualTemplateCommand.ItemNames.StandardValues", "__Standard Values");
-					}
-				}
-			}
-
-			/// <summary>
-			/// Gets Template IDs from configuration.
-			/// </summary>
-			public static class TemplateIDs
-			{
-				/// <summary>
-				/// /sitecore/templates/System/Templates/Template field 
-				/// </summary>
-				public static ID TemplateFieldID
-				{
-					get
-					{
-						string settingVal = Sitecore.Configuration.Settings.GetSetting("Verndale.SharedSource.SitecoreCommands.Fallback.MultilingualTemplateCommand.TemplateIDs.Template", "{455A3E98-A627-4B40-8035-E683A0331AC7}");
-
-						return new ID(settingVal);
-					}
-				}
-			}
-
-			/// <summary>
-			/// Gets Template Field IDS from settings.
-			/// </summary>
-			public static class TemplateFieldIds
-			{
-				/// <summary>
-				/// /sitecore/templates/System/Templates/Template field/Data/Enable Shared Language Fallback
-				/// </summary>
-				public static ID EnableSharedLanguageFallback
-				{
-					get
-					{
-						string settingVal = Sitecore.Configuration.Settings.GetSetting("Verndale.SharedSource.SitecoreCommands.Fallback.MultilingualTemplateCommand.TemplateFieldIds.EnableSharedLanguageFallback", "{24CB32F0-E364-4F37-B400-0F2899097B5B}");
-
-						return new ID(settingVal);
-					}
-				}
-
-				/// <summary>
-				/// /sitecore/templates/System/Templates/Sections/Advanced/Advanced/__Enable item fallback
-				/// </summary>
-				public static ID EnableItemFallback
-				{
-					get
-					{
-						string settingVal = Sitecore.Configuration.Settings.GetSetting("Verndale.SharedSource.SitecoreCommands.Fallback.MultilingualTemplateCommand.TemplateFieldIds.EnableItemFallback", "{FD4E2050-186C-4375-8B99-E8A85DD7436E}");
-
-						return new ID(settingVal);
-					}
-				}
-
-				/// <summary>
-				/// /sitecore/templates/System/Templates/Sections/Advanced/Advanced/__Enable item fallback
-				/// </summary>
-				public static ID EnforceVersionPresence
-				{
-					get
-					{
-						string settingVal = Sitecore.Configuration.Settings.GetSetting("Verndale.SharedSource.SitecoreCommands.Fallback.MultilingualTemplateCommand.TemplateFieldIds.EnforceVersionPresence", "{61CF7151-0CBD-4DB4-9738-D753A55A6E65}");
-
-						return new ID(settingVal);
-					}
-				}
-			}
+			return $"Processing completed. {changeCount:N0} items were updated.";
 		}
 
 		#endregion

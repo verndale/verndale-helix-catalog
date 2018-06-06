@@ -14,22 +14,20 @@ Verndale Helix Catalog is a collection of utilities for the Sitecore .NET CMS.
 The Feature.Redirects library solves the frequently occurring problem of managing a collection of urls that must be redirected to other urls. Current solutions involve
 IIS URL Rewrite module, which is not author-friendly, and using Sitecore Aliases, which is not scalable. This package uses a very small custom database to maintain
 the list of rewrite rules. The application is accessed from within the Sitcore desktop and uses Sitecore's native Sheer UI components.
+		
+Redirect rules are implemented through an HttpRequestBegin Pipeline processor that reviews would-be 404 requests for matching redirects and handles the response if
+there is a match
 
 Installation
-1. Add this NuGet package to your Sitecore solution
-2. Remove the .example suffix from /App_Config/Include/Feature/Verndale.Feature.Redirects.config.example to enable the application.
-2. Build and Deploy your solution to a target environment
-
-Usage Details
-Configure for use only on the sites that need it by adding sites to the ignored sites list on the pipeline handler configuration.
+1. Add this NuGet package to a web application project in your Sitecore solution.
+2. Build and Deploy your project to a target environment
 
 This library requires a Sitecore Package (included). The package should install automatically when you build and deploy your project.
 
 Configured for use with Sitecore 9.0.
 Requires Sitecore 9.0 NuGet packages, available here: https://sitecore.myget.org/F/sc-packages/api/v3/index.json
-Requires the installation of the included Package.
 	</description>
-	<releaseNotes>Initial release!</releaseNotes>
+	<releaseNotes>Removed Auto-generate Redirect based on Item change features - too risky.</releaseNotes>
 	<copyright>Copyright 2018</copyright>
 	<tags>Sitecore, Sitecore Helix, Sitecore Habitat, Sitecore Feature</tags>
   </metadata>

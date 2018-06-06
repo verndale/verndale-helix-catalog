@@ -2,7 +2,6 @@
 using System.Linq;
 using Sitecore.Diagnostics;
 using Sitecore.Globalization;
-using Sitecore.Links;
 using Sitecore.Web;
 
 namespace Verndale.Feature.LanguageFallback
@@ -19,33 +18,6 @@ namespace Verndale.Feature.LanguageFallback
 			}
 
 			return bool.Parse(setting);
-		}
-
-		public static LanguageEmbedding GetLanguageEmbedding(this SiteInfo siteInfo)
-		{
-			string rawSetting = siteInfo.Properties["languageEmbedding"];
-
-			if (string.IsNullOrEmpty(rawSetting))
-			{
-				return LinkManager.LanguageEmbedding;
-			}
-
-			var setting = rawSetting.ToLower();
-
-			switch (setting)
-			{
-				case "never":
-					return LanguageEmbedding.Never;
-
-				case "always":
-					return LanguageEmbedding.Always;
-
-				case "asneeded":
-					return LanguageEmbedding.AsNeeded;
-
-				default:
-					return LinkManager.LanguageEmbedding;
-			}
 		}
 
 		public static bool SupportsLanguage(this SiteInfo siteInfo, string languageCode)

@@ -123,7 +123,7 @@
     <Content Include="Constellation.License.txt" />
     <Content Include="Verndale.License.txt" />
     <None Include="app.config" />
-    <Content Include="App_Config\Include\Verndale\Verndale.Feature.LangaugeFallback.config">
+    <Content Include="App_Config\Include\Verndale\Verndale.Feature.LanguageFallback.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\packages\PutPackagesHere.txt" />

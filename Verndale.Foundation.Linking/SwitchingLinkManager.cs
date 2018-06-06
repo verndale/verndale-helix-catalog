@@ -30,8 +30,7 @@ namespace Verndale.Foundation.Linking
 		{
 			get
 			{
-				var siteLinkProvider = (Sitecore.Context.Site != null)
-					? Sitecore.Context.Site.Properties["linkProvider"] : String.Empty;
+				var siteLinkProvider = Sitecore.Context.Site?.Properties?["linkProvider"];
 
 				if (String.IsNullOrEmpty(siteLinkProvider))
 					return _providerHelper.Provider;

@@ -46,7 +46,7 @@ This library requires the installation of a Sitecore Package (included). This sh
 Configured for use with Sitecore 9.0.
 Requires Sitecore 9.0 NuGet packages, available here: https://sitecore.myget.org/F/sc-packages/api/v3/index.json
 	</description>
-	<releaseNotes>Simplified configuration file. Added better 404 support.</releaseNotes>
+	<releaseNotes>Renamed configuration file. Thanks Liz.</releaseNotes>
 	<copyright>Copyright 2018</copyright>
 	<tags>Sitecore, Sitecore Helix, Sitecore Habitat, Sitecore Feature</tags>
   </metadata>

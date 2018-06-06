@@ -39,6 +39,9 @@ namespace Verndale.Feature.LanguageFallback.Pipelines.HttpRequest
 				}
 
 				// Language is not supported. We need to 404.
+				// We ABSOLUTELY have to redirect here, because this Processor runs BEFORE Item Resolver, so any setting of the
+				// context item here will be overwritten by the pipeline, which we don't want.
+
 				SetLanguageToDefaultForSite(); // This ensures the generated link has the right language.
 
 				var target = PageNotFoundRepository.GetPageNotFoundItem(Sitecore.Context.Site, Sitecore.Context.Language, Sitecore.Context.Database);

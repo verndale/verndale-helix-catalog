@@ -128,7 +128,6 @@
     </Content>
     <Content Include="App_Config\Include\Verndale\Verndale.Foundation.Linking.config" />
     <Content Include="App_Config\Include\Verndale\Verndale.Foundation.PageNotFound.config" />
-    <None Include="App_Config\Include\Constellation\Constellation.Foundation.PackageVerification.config.example" />
     <None Include="App_Data\packages\Verndale-Feature-LanguageFallback-9.0.1.zip" />
     <None Include="packages.config" />
     <None Include="Verndale.Feature.LanguageFallback.nuspec" />

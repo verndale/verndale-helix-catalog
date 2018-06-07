@@ -30,9 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Constellation.Foundation.PackageVerification, Version=9.0.1.29093, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Constellation.Foundation.PackageVerification.9.0.1.29093\lib\net462\Constellation.Foundation.PackageVerification.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Constellation.Foundation.PackageVerification, Version=9.0.2.26899, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Constellation.Foundation.PackageVerification.9.0.2.26899\lib\net462\Constellation.Foundation.PackageVerification.dll</HintPath>
     </Reference>
     <Reference Include="Sitecore.Kernel, Version=11.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Sitecore.Kernel.NoReferences.9.0.171219\lib\NET462\Sitecore.Kernel.dll</HintPath>
@@ -61,12 +60,13 @@
     <Content Include="App_Data\packages\PutPackagesHere.txt" />
     <Content Include="App_Data\packages\Verndale-Foundation-Fields-9.0.1.zip" />
     <Content Include="App_Config\Include\Verndale\Verndale.Foundation.Fields.config" />
-    <Content Include="Constellation.License.txt" />
+    <None Include="App_Config\Include\Constellation\Constellation.Foundation.PackageVerification.config.example" />
     <None Include="packages.config" />
     <None Include="Verndale.Foundation.Fields.nuspec" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="Constellation.License.txt" />
     <Content Include="Verndale.License.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

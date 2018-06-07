@@ -37,9 +37,8 @@
       <HintPath>..\packages\Constellation.Foundation.Data.9.0.4.26199\lib\net462\Constellation.Foundation.Data.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="Constellation.Foundation.PackageVerification, Version=9.0.1.29093, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Constellation.Foundation.PackageVerification.9.0.1.29093\lib\net462\Constellation.Foundation.PackageVerification.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Constellation.Foundation.PackageVerification, Version=9.0.2.26899, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Constellation.Foundation.PackageVerification.9.0.2.26899\lib\net462\Constellation.Foundation.PackageVerification.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=2.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.2.1.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
@@ -120,15 +119,16 @@
     <Compile Include="SiteInfoExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\packages\PutPackagesHere.txt" />
     <Content Include="Constellation.License.txt" />
     <Content Include="Verndale.License.txt" />
     <None Include="app.config" />
     <Content Include="App_Config\Include\Verndale\Verndale.Feature.LanguageFallback.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="App_Data\packages\PutPackagesHere.txt" />
     <Content Include="App_Config\Include\Verndale\Verndale.Foundation.Linking.config" />
     <Content Include="App_Config\Include\Verndale\Verndale.Foundation.PageNotFound.config" />
+    <None Include="App_Config\Include\Constellation\Constellation.Foundation.PackageVerification.config.example" />
     <None Include="App_Data\packages\Verndale-Feature-LanguageFallback-9.0.1.zip" />
     <None Include="packages.config" />
     <None Include="Verndale.Feature.LanguageFallback.nuspec" />

@@ -52,7 +52,7 @@ run for Sitecore system sites. (see sitesToIgnore below).
 Configured for use with Sitecore 9.0.
 Requires Sitecore 9.0 NuGet packages, available here: https://sitecore.myget.org/F/sc-packages/api/v3/index.json
 	</description>
-	<releaseNotes>Cut down on NuGet dependencies.</releaseNotes>
+	<releaseNotes>Had to add paths to ignore because TDS requires a Site context, but we don't want a 404 output for SOAP requests.</releaseNotes>
 	<copyright>Copyright 2018</copyright>
 	<tags>Sitecore, Sitecore Helix, Sitecore Habitat, Sitecore Feature</tags>
   </metadata>

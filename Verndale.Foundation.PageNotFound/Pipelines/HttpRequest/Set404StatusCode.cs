@@ -10,21 +10,31 @@ namespace Verndale.Foundation.PageNotFound.Pipelines.HttpRequest
 	{
 		protected override void Execute(HttpRequestArgs args)
 		{
+			if (args.Aborted)
+			{
+				return;
+			}
+
 			if (Sitecore.Context.Site == null || Sitecore.Context.Item == null)
 			{
 				// Nothing we can do here.
 				return;
 			}
 
-			if (Sitecore.Context.Item.ID != Sitecore.Context.Site.GetPageNotFoundID())
+			/*
+			 * Please note: This processor must execute for a very specific kind of request, therefore
+			 * you cannot invert the decision below, because the request will execute under conditions
+			 * it was not designed to handle. (evidence: it disables TDS because it returns 404 for almost
+			 * all non-Sitecore requests!)
+			 *
+			 * This handler should ONLY return 404 if the context Item is the site's Page Not Found Item.
+			 */
+			if (Sitecore.Context.Item.ID == Sitecore.Context.Site.GetPageNotFoundID())
 			{
-				// Not the 404 page.
-				return;
+				HttpContext.Current.Response.TrySkipIisCustomErrors = true;
+				HttpContext.Current.Response.StatusCode = (int)HttpStatusCode.NotFound;
+				HttpContext.Current.Response.StatusDescription = "Page not found";
 			}
-
-			HttpContext.Current.Response.TrySkipIisCustomErrors = true;
-			HttpContext.Current.Response.StatusCode = (int)HttpStatusCode.NotFound;
-			HttpContext.Current.Response.StatusDescription = "Page not found";
 		}
 
 		protected override void Defer(HttpRequestArgs args)

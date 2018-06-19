@@ -95,6 +95,11 @@ namespace Verndale.Feature.LanguageFallback.Pipelines.HttpRequest
 				urlLanguage = GetLanguageFromQueryString(args);
 			}
 
+			if (string.IsNullOrEmpty(urlLanguage))
+			{
+				return null;
+			}
+
 			if (Language.TryParse(urlLanguage, out Language language))
 			{
 				Log.Debug($"Verndale.Feature.LanguageFallback DefaultSiteLanguageResolver: Language found in URL. {HttpContext.Current.Request.Url.OriginalString}", this);

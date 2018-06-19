@@ -14,6 +14,7 @@ namespace Verndale.Feature.LanguageFallback.UI
 	{
 		// ReSharper disable once InconsistentNaming
 		private static readonly ID FieldsToCheckSettingID = new ID("{3D2EC9DC-52EA-4355-97D1-34BBAD390E89}");
+		private static readonly ID FieldNameListID = new ID("{9F981CB5-DCF7-48AA-B69D-27657AC15ED7}");
 
 		protected Item RootItem
 		{
@@ -29,24 +30,6 @@ namespace Verndale.Feature.LanguageFallback.UI
 		{
 			// sets to either the selected database or 'master' if none
 			get { return Sitecore.Configuration.Factory.GetDatabase(StringExtensions.IsNullOrEmpty(ddlDatabase.SelectedValue) ? "master" : ddlDatabase.SelectedValue); }
-		}
-
-		private static String _fieldToCheckForReporting;
-		private static String FieldToCheckForReporting
-		{
-			get
-			{
-				if (_fieldToCheckForReporting == null)
-				{
-					var database = Sitecore.Configuration.Factory.GetDatabase("master");
-
-					var setting = database.GetItem(FieldsToCheckSettingID);
-
-					_fieldToCheckForReporting = setting["Fields to Check for Reporting"];
-				}
-
-				return _fieldToCheckForReporting;
-			}
 		}
 
 		protected bool HideFilteredContent
@@ -81,9 +64,6 @@ namespace Verndale.Feature.LanguageFallback.UI
 			if (!IsPostBack)
 			{
 				BindControls();
-				// output the list of fields that will be used to test fallback, so the user knows what they are
-				// they are delimited by comma, so replace by comma space to make more user friendly
-				ltlFieldsToCheckForReporting.Text = FieldToCheckForReporting.Replace(",", ", ");
 			}
 
 			langWrapper.Visible = false;
@@ -92,6 +72,17 @@ namespace Verndale.Feature.LanguageFallback.UI
 		// This function will bind "Database" and "Language" dropdowns...
 		protected void BindControls()
 		{
+
+			var database = Sitecore.Configuration.Factory.GetDatabase("master");
+
+			var fieldsToCheckSetting = database.GetItem(FieldsToCheckSettingID);
+
+			var fieldsToCheck = fieldsToCheckSetting.Fields[FieldNameListID].Value;
+
+			// output the list of fields that will be used to test fallback, so the user knows what they are
+			// they are delimited by comma, so replace by comma space to make more user friendly
+			ltlFieldsToCheckForReporting.Text = fieldsToCheck?.Replace(",", ", ");
+
 			var names = Sitecore.Configuration.Factory.GetDatabaseNames();
 			// Binding Database names here, default master
 			foreach (var db in names)
@@ -287,7 +278,7 @@ namespace Verndale.Feature.LanguageFallback.UI
 				// default the languageFallingBackTo to this versions language
 				languageFallingBackTo = thisLanguageVersion.Language;
 				// get the fields to check, splitting the values on the comma
-				var fallbackFieldsList = FieldToCheckForReporting.Split(',');
+				var fallbackFieldsList = GetFieldsToCheck().Split(',');
 				// loop through each field and check if the current item language version has a value for the field
 				// if ANY do, then the content is not considered falling back
 				// NOTE, of course this means some fields could be falling back and others not, 
@@ -396,6 +387,15 @@ namespace Verndale.Feature.LanguageFallback.UI
 			return languages;
 		}
 
+		private string GetFieldsToCheck()
+		{
+			var database = Sitecore.Configuration.Factory.GetDatabase("master");
 
+			var fieldsToCheckSetting = database.GetItem(FieldsToCheckSettingID);
+
+			var output = fieldsToCheckSetting?.Fields[FieldNameListID]?.Value;
+
+			return output ?? string.Empty;
+		}
 	}
 }

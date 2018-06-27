@@ -89,8 +89,8 @@
     <Reference Include="Verndale.Foundation.Linking, Version=9.0.1.23791, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Verndale.Foundation.Linking.9.0.1.23791\lib\net462\Verndale.Foundation.Linking.dll</HintPath>
     </Reference>
-    <Reference Include="Verndale.Foundation.PageNotFound, Version=9.0.3.25579, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Verndale.Foundation.PageNotFound.9.0.3.25579\lib\net462\Verndale.Foundation.PageNotFound.dll</HintPath>
+    <Reference Include="Verndale.Foundation.PageNotFound, Version=9.0.5.19131, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Verndale.Foundation.PageNotFound.9.0.5.19131\lib\net462\Verndale.Foundation.PageNotFound.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -128,8 +128,8 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Config\Include\Verndale\Verndale.Foundation.Linking.config" />
-    <Content Include="App_Config\Include\Verndale\Verndale.Foundation.PageNotFound.config" />
     <Content Include="App_Data\packages\Verndale-Feature-LanguageFallback-9.0.6.0.zip" />
+    <None Include="App_Config\Include\Verndale\Verndale.Foundation.PageNotFound.config" />
     <None Include="packages.config" />
     <None Include="Verndale.Feature.LanguageFallback.nuspec" />
   </ItemGroup>

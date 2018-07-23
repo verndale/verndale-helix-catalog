@@ -22,7 +22,7 @@ This library is transcribed with permission from JammyKam's original code here: 
 Configured for use with Sitecore 8.2+
 Requires Sitecore NuGet packages, available here: https://sitecore.myget.org/F/sc-packages/api/v3/index.json
 	</description>
-	<releaseNotes>Initial release!</releaseNotes>
+	<releaseNotes>Relaxed constraints on Microsoft DependencyInjection libraries</releaseNotes>
 	<copyright>Copyright 2018</copyright>
 	<tags>Sitecore, Sitecore Helix, Sitecore Habitat, Sitecore Feature</tags>
   </metadata>

@@ -1,63 +1,58 @@
 ﻿using Sitecore.Data.Items;
-using Sitecore.Data.Query;
+using System.Linq;
 
 namespace Verndale.Feature.LanguageFallback.Commands
 {
-	/// <summary>
-	/// Custom Sitecore Content editor Command to automatically check the "Enable Language Fallback" field on Template items
-	/// on the selected item and all descendants.
-	/// </summary>
-	public class DisableItemLanguageFallbackCommand : MultilingualTemplateCommand
-	{
-		/// <summary>
-		/// Gets the command name.
-		/// </summary>
-		public override string CommandName
-		{
-			get { return "Uncheck 'Enable Language Fallback'"; }
-		}
+    /// <summary>
+    /// Custom Sitecore Content editor Command to automatically check the "Enable Language Fallback" field on Template items
+    /// on the selected item and all descendants.
+    /// </summary>
+    public class DisableItemLanguageFallbackCommand : MultilingualTemplateCommand
+    {
+        /// <summary>
+        /// Gets the command name.
+        /// </summary>
+        public override string CommandName
+        {
+            get { return "Uncheck 'Enable Language Fallback' on standard values items"; }
+        }
 
-		/// <summary>
-		/// Custom Sitecore Content editor Command to automatically check the "Enable Language Fallback" field on Template items
-		/// on the selected item and all descendants.
-		/// </summary>
-		public override int Process(Item contextItem)
-		{
-			int count = 0;
+        /// <summary>
+        /// Custom Sitecore Content editor Command to automatically check the "Enable Language Fallback" field on Template items
+        /// on the selected item and all descendants.
+        /// </summary>
+        public override int Process(Item contextItem)
+        {
+            int count = 0;
 
+            // Process the parent item.
+            if (contextItem.Template.StandardValues.ID == contextItem.ID)
+            {
+                bool valueChanged = SetCheckboxFieldValue(contextItem, Sitecore.FieldIDs.EnableItemFallback, false);
 
-			// Process the parent item.
-			if (contextItem.Template.StandardValues.ID == contextItem.ID)
-			{
-				bool valueChanged = SetCheckboxFieldValue(contextItem, Sitecore.FieldIDs.EnableItemFallback, false);
+                if (valueChanged)
+                {
+                    count++;
+                }
+            }
 
-				if (valueChanged)
-				{
-					count++;
-				}
-			}
+            // Get all the standard value items
+            Item[] standardValueItems = contextItem.Axes.GetDescendants()
+                .Where(d => d.Template.StandardValues.ID == d.ID)
+                .OrderBy(o => o.Paths.FullPath)
+                .ToArray();
 
-			// Find any templates in this branch.
-			var templates = Query.SelectItems($".//*[@@templateid == \"{Sitecore.TemplateIDs.Template}]\"", contextItem);
+            foreach (Item standardValuesItem in standardValueItems)
+            {
+                bool valueChanged = SetCheckboxFieldValue(standardValuesItem, Sitecore.FieldIDs.EnableItemFallback, false);
 
+                if (valueChanged)
+                {
+                    count++;
+                }
+            }
 
-			// Update the standard values.
-			foreach (TemplateItem template in templates)
-			{
-				if (template.StandardValues == null)
-				{
-					continue;
-				}
-
-				bool valueChanged = SetCheckboxFieldValue(template.StandardValues, Sitecore.FieldIDs.EnableItemFallback, false);
-
-				if (valueChanged)
-				{
-					count++;
-				}
-			}
-
-			return count;
-		}
-	}
+            return count;
+        }
+    }
 }

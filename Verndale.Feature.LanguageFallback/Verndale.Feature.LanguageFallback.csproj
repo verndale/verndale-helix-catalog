@@ -111,14 +111,13 @@
     <Compile Include="SiteInfoExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\packages\PutPackagesHere.txt" />
     <Content Include="Constellation.License.txt" />
     <Content Include="Verndale.License.txt" />
     <None Include="app.config" />
     <Content Include="App_Config\Include\Verndale\Verndale.Feature.LanguageFallback.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="App_Data\packages\Verndale-Feature-LanguageFallback-9.0.6.0.zip" />
+    <None Include="App_Data\packages\Verndale-Feature-LanguageFallback-9.0.6.0.zip" />
     <None Include="packages.config" />
     <None Include="Verndale.Feature.LanguageFallback.nuspec" />
   </ItemGroup>

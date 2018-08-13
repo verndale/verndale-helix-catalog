@@ -41,9 +41,6 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=2.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.2.1.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>False</Private>
@@ -86,12 +83,6 @@
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Verndale.Foundation.Linking, Version=9.0.1.23791, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Verndale.Foundation.Linking.9.0.1.23791\lib\net462\Verndale.Foundation.Linking.dll</HintPath>
-    </Reference>
-    <Reference Include="Verndale.Foundation.PageNotFound, Version=9.0.5.19131, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Verndale.Foundation.PageNotFound.9.0.5.19131\lib\net462\Verndale.Foundation.PageNotFound.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CreateVersionInAllLanguagesCommand.cs" />
@@ -120,16 +111,13 @@
     <Compile Include="SiteInfoExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\packages\PutPackagesHere.txt" />
     <Content Include="Constellation.License.txt" />
     <Content Include="Verndale.License.txt" />
     <None Include="app.config" />
     <Content Include="App_Config\Include\Verndale\Verndale.Feature.LanguageFallback.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="App_Config\Include\Verndale\Verndale.Foundation.Linking.config" />
-    <Content Include="App_Data\packages\Verndale-Feature-LanguageFallback-9.0.6.0.zip" />
-    <None Include="App_Config\Include\Verndale\Verndale.Foundation.PageNotFound.config" />
+    <None Include="App_Data\packages\Verndale-Feature-LanguageFallback-9.0.6.0.zip" />
     <None Include="packages.config" />
     <None Include="Verndale.Feature.LanguageFallback.nuspec" />
   </ItemGroup>
@@ -152,6 +140,11 @@
       <SubType>ASPXCodeBehind</SubType>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Verndale.Foundation.PageNotFound\Verndale.Foundation.PageNotFound.csproj">
+      <Project>{02455eea-5dd6-4028-a0e8-076a69222288}</Project>
+      <Name>Verndale.Foundation.PageNotFound</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -46,7 +46,7 @@ This library requires the installation of a Sitecore Package (included). This sh
 Configured for use with Sitecore 9.0.
 Requires Sitecore 9.0 NuGet packages, available here: https://sitecore.myget.org/F/sc-packages/api/v3/index.json
 	</description>
-	<releaseNotes>Excluded master database from LanguageResolver.</releaseNotes>
+	<releaseNotes>Merged Steve's changes. Now it works!</releaseNotes>
 	<copyright>Copyright 2018</copyright>
 	<tags>Sitecore, Sitecore Helix, Sitecore Habitat, Sitecore Feature</tags>
   </metadata>

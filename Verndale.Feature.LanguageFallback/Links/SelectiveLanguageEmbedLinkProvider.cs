@@ -23,7 +23,7 @@ namespace Verndale.Feature.LanguageFallback.Links
 
 			if (options.LanguageEmbedding == LanguageEmbedding.Always)
 			{
-				if (item.Language.CultureInfo.IetfLanguageTag == site.Language)
+				if (options.Language.CultureInfo.IetfLanguageTag == site.Language)
 				{
 					options.LanguageEmbedding = LanguageEmbedding.Never;
 				}

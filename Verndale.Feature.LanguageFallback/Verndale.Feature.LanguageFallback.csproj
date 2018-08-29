@@ -83,6 +83,9 @@
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Verndale.Foundation.Linking, Version=9.0.2.25705, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Verndale.Foundation.Linking.9.0.2.25705\lib\net462\Verndale.Foundation.Linking.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CreateVersionInAllLanguagesCommand.cs" />
@@ -118,6 +121,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\packages\Verndale-Feature-LanguageFallback-9.0.6.0.zip" />
+    <Content Include="App_Config\Include\Verndale\Verndale.Foundation.Linking.config" />
     <None Include="packages.config" />
     <None Include="Verndale.Feature.LanguageFallback.nuspec" />
   </ItemGroup>

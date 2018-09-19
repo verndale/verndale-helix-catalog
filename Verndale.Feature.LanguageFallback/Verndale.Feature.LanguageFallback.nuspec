@@ -46,8 +46,7 @@ This library requires the installation of a Sitecore Package (included). This sh
 Configured for use with Sitecore 9.0.
 Requires Sitecore 9.0 NuGet packages, available here: https://sitecore.myget.org/F/sc-packages/api/v3/index.json
 	</description>
-	<releaseNotes>Altered the SelectiveLanguageLinkProvider to look at the inbound option's language rather than the inbound item's language to 
-prevent Language Fallback from accidentally adding the language to URLs when the site is technically in its "native" language.</releaseNotes>
+	<releaseNotes>Package installer will now only run on CM style environments.</releaseNotes>
 	<copyright>Copyright 2018</copyright>
 	<tags>Sitecore, Sitecore Helix, Sitecore Habitat, Sitecore Feature</tags>
   </metadata>

@@ -19,7 +19,12 @@ namespace Verndale.Feature.LanguageFallback.Links
 			Assert.ArgumentNotNull(item, nameof(item));
 			Assert.ArgumentNotNull(options, nameof(options));
 
-			var site = item.GetSite();
+			var site = options.Site;
+
+			if (site == null)
+			{
+				item.GetSite();
+			}
 
 			if (options.LanguageEmbedding == LanguageEmbedding.Always)
 			{

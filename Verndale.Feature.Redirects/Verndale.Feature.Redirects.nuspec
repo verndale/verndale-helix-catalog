@@ -27,7 +27,7 @@ This library requires a Sitecore Package (included). The package should install 
 Configured for use with Sitecore 9.0.
 Requires Sitecore 9.0 NuGet packages, available here: https://sitecore.myget.org/F/sc-packages/api/v3/index.json
 	</description>
-	<releaseNotes>Updated Constellation dependency.</releaseNotes>
+	<releaseNotes>Ensured the package manager only runs on CM type environments.</releaseNotes>
 	<copyright>Copyright 2018</copyright>
 	<tags>Sitecore, Sitecore Helix, Sitecore Habitat, Sitecore Feature</tags>
   </metadata>

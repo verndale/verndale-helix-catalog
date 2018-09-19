@@ -1,12 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<configuration xmlns:patch="http://www.sitecore.net/xmlconfig/">
+<configuration xmlns:patch="http://www.sitecore.net/xmlconfig/"  xmlns:role="http://www.sitecore.net/xmlconfig/role/">
 	<sitecore>
 		<pipelines>
 			<initialize>
 				<!--
 				Kicks off the Package Verifier, which has a separate configuration area to keep the Initialize pipeline clear.
 				-->
-				<processor type="Constellation.Foundation.PackageVerification.Pipelines.Initialize.PackageVerifier, Constellation.Foundation.PackageVerification" />
+				<processor 
+					type="Constellation.Foundation.PackageVerification.Pipelines.Initialize.PackageVerifier, Constellation.Foundation.PackageVerification"
+					role:require="Standalone or ContentManagement" />
 			</initialize>
 		</pipelines>
 		<constellation>
@@ -28,7 +30,8 @@
 					database: the database where the Item lives, typically master or core.
 			
 			-->
-			<packageVerifier defaultProcessorType="Constellation.Foundation.PackageVerification.PackageProcessor, Constellation.Foundation.PackageVerification">
+			<packageVerifier 
+				defaultProcessorType="Constellation.Foundation.PackageVerification.PackageProcessor, Constellation.Foundation.PackageVerification">
 				<package name="example" packageFileName="example.zip" processorOverrideType="">
 					<artifact id="{11111111-1111-1111-1111-111111111111}" database="master"/>
 					<artifact id="{11111111-1111-1111-1111-111111111111}" database="core"/>

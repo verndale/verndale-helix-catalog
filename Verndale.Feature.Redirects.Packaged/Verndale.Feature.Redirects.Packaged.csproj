@@ -51,7 +51,7 @@
     <Content Include="Constellation.License.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App_Config\Include\Constellation\Constellation.Foundation.PackageVerification.config.example" />
+    <None Include="App_Config\Include\Constellation\Verndale.Feature.Redirects.Packaged.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Constellation.Foundation.PackageVerification, Version=9.0.4.16508, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Constellation.Foundation.PackageVerification.9.0.4.16508\lib\net462\Constellation.Foundation.PackageVerification.dll</HintPath>
+    <Reference Include="Constellation.Foundation.PackageVerification, Version=9.0.5.23264, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Constellation.Foundation.PackageVerification.9.0.5.23264\lib\net462\Constellation.Foundation.PackageVerification.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -47,12 +47,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\packages\PutPackagesHere.txt" />
-    <Content Include="Constellation.License.txt" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="App_Config\Include\Constellation\Constellation.Foundation.PackageVerification.config.example" />
     <None Include="App_Config\Include\Constellation\Verndale.Feature.Redirects.Packaged.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\packages\PutPackagesHere.txt" />
+    <Content Include="Constellation.License.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -37,8 +37,8 @@
     <Reference Include="Constellation.Foundation.Contexts, Version=9.0.3.19448, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Constellation.Foundation.Contexts.9.0.3.19448\lib\net462\Constellation.Foundation.Contexts.dll</HintPath>
     </Reference>
-    <Reference Include="Constellation.Foundation.PackageVerification, Version=9.0.4.16508, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Constellation.Foundation.PackageVerification.9.0.4.16508\lib\net462\Constellation.Foundation.PackageVerification.dll</HintPath>
+    <Reference Include="Constellation.Foundation.PackageVerification, Version=9.0.5.23264, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Constellation.Foundation.PackageVerification.9.0.5.23264\lib\net462\Constellation.Foundation.PackageVerification.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
@@ -96,6 +96,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <Content Include="App_Config\Include\Verndale\Verndale.Feature.Redirects.config" />
+    <None Include="App_Config\Include\Constellation\Constellation.Foundation.PackageVerification.config.example" />
     <None Include="Verndale.Feature.Redirects.nuspec">
       <SubType>Designer</SubType>
     </None>

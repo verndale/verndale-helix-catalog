@@ -37,7 +37,7 @@ namespace Verndale.Feature.Redirects.Dialogs
 					UrlRedirect urlRedirect = allRecords[recordCount];
 					StringBuilder csvRow = new StringBuilder(10 * allRecords.Count() * 3);
 
-					for (int c = 0; c < 3; c++)
+					for (int c = 0; c < 4; c++)
 					{
 						object columnValue;
 
@@ -47,15 +47,18 @@ namespace Verndale.Feature.Redirects.Dialogs
 						switch (c)
 						{
 							case 0:
-								columnValue = urlRedirect.OldUrl;
-								break;
+							    columnValue = urlRedirect.SiteName;
+                                break;
 							case 1:
-								columnValue = urlRedirect.NewUrl;
-								break;
-							default:
-								columnValue = urlRedirect.RedirectType;
-								break;
-						}
+							    columnValue = urlRedirect.OldUrl;
+                                break;
+						    case 2:
+						        columnValue = urlRedirect.NewUrl;
+                                break;
+						    default:
+						        columnValue = urlRedirect.RedirectType ? "301" : "302";
+                                break;
+                        }
 						if (columnValue == null)
 							csvRow.Append("");
 						else

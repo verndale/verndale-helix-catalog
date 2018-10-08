@@ -34,19 +34,5 @@ namespace Verndale.Feature.Redirects.Commands
 			}
 
 		}
-
-		private static void exportDataTableToCsv()
-		{
-
-			HttpContext context = HttpContext.Current;
-			context.Response.Clear();
-
-			context.Response.Write("one,two,three");
-			context.Response.Write(Environment.NewLine);
-
-			context.Response.ContentType = "text/csv";
-			context.Response.AppendHeader("Content-Disposition", "attachment; filename=" + "TESTFILE" + ".csv");
-			context.Response.End();
-		}
 	}
 }

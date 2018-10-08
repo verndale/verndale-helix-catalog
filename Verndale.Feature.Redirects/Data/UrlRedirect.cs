@@ -1,19 +1,28 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Sitecore.ContentSearch;
+using Sitecore.ContentSearch.SearchTypes;
 
 namespace Verndale.Feature.Redirects.Data
 {
-	[Table("UrlRedirects")]
-	public class UrlRedirect
+	public class UrlRedirect : SearchResultItem
 	{
-		public int Id { get; set; }
+	    [IndexField("site_name")]
+        public string SiteName { get; set; }
 
-		[Index]
-		[StringLength(450)]
-		public string OldUrl { get; set; }
+	    [IndexField("original_url")]
+        public string OldUrl { get; set; }
 
-		public string NewUrl { get; set; }
+	    [IndexField("new_url")]
+        public string NewUrl { get; set; }
 
-		public int? RedirectType { get; set; }
+	    [IndexField("is_301")]
+        public bool RedirectType { get; set; }
+
+        [IndexField("nowildcardurl_s")]
+        public string NoWildCardUrl { get; set; }
+
+	    public string RedirectTypeString
+	    {
+	        get => RedirectType ? "301" : "302";
+	    }
 	}
 }

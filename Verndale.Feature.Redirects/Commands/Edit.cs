@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using System.Text.RegularExpressions;
 using System.Web;
 using Sitecore;
+using Sitecore.Data;
 using Sitecore.Diagnostics;
 using Sitecore.Globalization;
 using Sitecore.Shell.Framework.Commands;
@@ -49,7 +50,7 @@ namespace Verndale.Feature.Redirects.Commands
 
 			if (args.IsPostBack)
 			{
-				string id = args.Parameters["ID"];
+				ID id = new ID(args.Parameters["ID"]);
 				//int id = Convert.ToInt32(strid);
 				if (!args.HasResult)
 				{

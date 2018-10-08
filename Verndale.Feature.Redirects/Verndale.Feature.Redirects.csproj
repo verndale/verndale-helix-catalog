@@ -78,6 +78,7 @@
     <Compile Include="Commands\Export.cs" />
     <Compile Include="Commands\Import.cs" />
     <Compile Include="Commands\New.cs" />
+    <Compile Include="Data\Computed Fields\OriginalUrlStringComputedField.cs" />
     <Compile Include="Data\Computed Fields\WildcardComputedField.cs" />
     <Compile Include="Data\Constants.cs" />
     <Compile Include="Dialogs\EditRedirectPage.cs" />
@@ -107,13 +108,15 @@
   <ItemGroup>
     <None Include="App.config" />
     <Content Include="App_Config\Include\Verndale\Verndale.Feature.Redirects.config" />
-    <None Include="App_Config\Include\Constellation\Constellation.Foundation.ModelMapper.config" />
     <None Include="App_Data\packages\RedirectManagerBucket-10052018.zip" />
     <None Include="Verndale.Feature.Redirects.nuspec">
       <SubType>Designer</SubType>
     </None>
     <Content Include="App_Data\packages\Verndale-Feature-Redirects-9.0.1.zip" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Config\Include\Constellation\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

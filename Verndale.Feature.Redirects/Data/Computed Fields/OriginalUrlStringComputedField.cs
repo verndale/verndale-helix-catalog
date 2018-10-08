@@ -8,7 +8,7 @@ using System;
 
 namespace Verndale.Feature.Redirects.Data.Computed_Fields
 {
-    public class WildcardComputedField : IComputedIndexField
+    public class OriginalUrlStringComputedField : IComputedIndexField
     {
         public string FieldName { get; set; }
         public string ReturnType { get; set; }
@@ -39,9 +39,9 @@ namespace Verndale.Feature.Redirects.Data.Computed_Fields
             {
                 string oldUrl = oldUrlField.Value;
 
-                if (!string.IsNullOrWhiteSpace(oldUrl) && oldUrl.EndsWith("*"))
+                if (!string.IsNullOrWhiteSpace(oldUrl))
                 {
-                    return oldUrl.TrimEnd('*');
+                    return oldUrl;
                 }
             }
             

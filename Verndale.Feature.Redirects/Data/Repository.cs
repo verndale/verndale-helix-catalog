@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Constellation.Foundation.ModelMapping;
 using Sitecore;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Linq;
 using Sitecore.ContentSearch.Linq.Extensions;
+using Sitecore.ContentSearch.SearchTypes;
 using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Data.Serialization;
@@ -27,7 +29,8 @@ namespace Verndale.Feature.Redirects.Data
 		    ISearchIndex index = BuildSearchIndex();
 		    using (IProviderSearchContext context = index.CreateSearchContext())
 		    {
-		        var search = context.GetQueryable<UrlRedirect>().Where(x => x.TemplateId == Constants.Ids.RedirectItemTemplateId && x.Paths.Contains(Constants.Ids.RedirectBucketItemId));
+		        var search = context.GetQueryable<UrlRedirect>()
+                    .Where(IsRedirect<UrlRedirect>());
 		        return search.ToList();
 		    }
 		}
@@ -123,7 +126,7 @@ namespace Verndale.Feature.Redirects.Data
 		/// <summary>
 		/// Updates an existing redirect.
 		/// </summary>
-		public static void Update(string id, string siteName, string oldUrl, string newUrl, bool type)
+		public static void Update(ID id, string siteName, string oldUrl, string newUrl, bool type)
 		{
 			if (string.IsNullOrWhiteSpace(oldUrl))
 			{
@@ -169,24 +172,24 @@ namespace Verndale.Feature.Redirects.Data
 		    ISearchIndex index = BuildSearchIndex();
 		    using (IProviderSearchContext context = index.CreateSearchContext())
 		    {
-		        return context.GetQueryable<UrlRedirect>().Any(x => x.TemplateId == Constants.Ids.RedirectItemTemplateId && x.Paths.Contains(Constants.Ids.RedirectBucketItemId) && x.OldUrl == oldUrl);
+		        return context.GetQueryable<UrlRedirect>().Where(IsRedirect<UrlRedirect>()).Any(x => x.OriginalUrlString == oldUrl);
 		    }
 		}
 
 		/// <summary>
 		/// Checks if the old url exists.
 		/// </summary>
-		public static bool CheckUrlExists(string id, string oldUrl)
+		public static bool CheckUrlExists(ID id, string oldUrl)
 		{
 			if (string.IsNullOrWhiteSpace(oldUrl))
 			{
 				return false;
 			}
-            ID itemId = new ID(id);
+
 		    ISearchIndex index = BuildSearchIndex();
 		    using (IProviderSearchContext context = index.CreateSearchContext())
 		    {
-		        return context.GetQueryable<UrlRedirect>().Any(x => x.TemplateId == Constants.Ids.RedirectItemTemplateId && x.Paths.Contains(Constants.Ids.RedirectBucketItemId) && x.ItemId!=itemId && x.OldUrl == oldUrl);
+		        return context.GetQueryable<UrlRedirect>().Where(IsRedirect<UrlRedirect>()).Any(x => x.OriginalUrlString == oldUrl && x.ItemId!=id);
 		    }
 		}
 
@@ -208,18 +211,15 @@ namespace Verndale.Feature.Redirects.Data
 				if (performEndsWithWildcard)
 				{
 				    List<UrlRedirect> potentialResults = context.GetQueryable<UrlRedirect>()
-				        .Where(x => x.TemplateId == Constants.Ids.RedirectItemTemplateId
-				                    && x.Paths.Contains(Constants.Ids.RedirectBucketItemId)
-				                    && x.OldUrl.EndsWith("*")).ToList();
+				        .Where(IsRedirect<UrlRedirect>())
+                        .Where(x => x.NoWildCardUrl!=String.Empty).ToList();
 
-				    redirect = potentialResults.FirstOrDefault(x => requestUrl.StartsWith(x.NoWildCardUrl));
+				    redirect = potentialResults.FirstOrDefault(x => requestUrl.Contains(x.NoWildCardUrl));
 				}
 				else
 				{
-					redirect = context.GetQueryable<UrlRedirect>()
-                        .FirstOrDefault(x => x.TemplateId == Constants.Ids.RedirectItemTemplateId 
-                        && x.Paths.Contains(Constants.Ids.RedirectBucketItemId) 
-                        && x.OldUrl == requestUrl);
+					redirect = context.GetQueryable<UrlRedirect>().Where(IsRedirect<UrlRedirect>())
+                        .FirstOrDefault(x => x.OriginalUrlString == requestUrl);
 				}
 
 				return redirect;
@@ -239,7 +239,7 @@ namespace Verndale.Feature.Redirects.Data
 		    ISearchIndex index = BuildSearchIndex();
 		    using (IProviderSearchContext context = index.CreateSearchContext())
 		    {
-		        return context.GetQueryable<UrlRedirect>().FirstOrDefault(x => x.TemplateId == Constants.Ids.RedirectItemTemplateId && x.Paths.Contains(Constants.Ids.RedirectBucketItemId) && x.NewUrl == newUrl);
+		        return context.GetQueryable<UrlRedirect>().Where(IsRedirect<UrlRedirect>()).FirstOrDefault(x => x.NewUrl == newUrl);
 		    }
 		}
 
@@ -256,7 +256,7 @@ namespace Verndale.Feature.Redirects.Data
 		    ISearchIndex index = BuildSearchIndex();
 		    using (IProviderSearchContext context = index.CreateSearchContext())
 		    {
-		        return context.GetQueryable<UrlRedirect>().FirstOrDefault(x => x.TemplateId == Constants.Ids.RedirectItemTemplateId && x.Paths.Contains(Constants.Ids.RedirectBucketItemId) && x.OldUrl == oldUrl);
+		        return context.GetQueryable<UrlRedirect>().Where(IsRedirect<UrlRedirect>()).FirstOrDefault(x=>x.OriginalUrlString == oldUrl);
 		    }
 		}
 
@@ -265,11 +265,16 @@ namespace Verndale.Feature.Redirects.Data
 	    /// <summary>
 	    /// Builds the search index.
 	    /// </summary>
-	    public static ISearchIndex BuildSearchIndex()
+	    private static ISearchIndex BuildSearchIndex()
 	    {
 	        return ContentSearchManager.GetIndex("sitecore_master_index");
 	    }
-
+        
+	    private static Expression<Func<T, bool>> IsRedirect<T>() where T : SearchResultItem
+	    {
+	        return searchResultItem => searchResultItem.TemplateId == Constants.Ids.RedirectItemTemplateId
+	                                   && searchResultItem.Paths.Contains(Constants.Ids.RedirectBucketItemId);
+	    }
         #endregion
 
     }

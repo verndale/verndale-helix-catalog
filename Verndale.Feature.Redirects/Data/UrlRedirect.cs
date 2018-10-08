@@ -17,10 +17,13 @@ namespace Verndale.Feature.Redirects.Data
 	    [IndexField("is_301")]
         public bool RedirectType { get; set; }
 
-        [IndexField("nowildcardurl_s")]
+        [IndexField("nowildcardurl")]
         public string NoWildCardUrl { get; set; }
 
-	    public string RedirectTypeString
+	    [IndexField("originalurlstring")]
+	    public string OriginalUrlString { get; set; }
+
+        public string RedirectTypeString
 	    {
 	        get => RedirectType ? "301" : "302";
 	    }

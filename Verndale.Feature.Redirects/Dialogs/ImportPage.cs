@@ -2,9 +2,12 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Web.UI.WebControls;
+using Sitecore;
 using Sitecore.Controls;
+using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Verndale.Feature.Redirects.Data;
+using Convert = System.Convert;
 
 namespace Verndale.Feature.Redirects.Dialogs
 {
@@ -47,10 +50,11 @@ namespace Verndale.Feature.Redirects.Dialogs
 
 						if (checkOldUrl == null && !string.IsNullOrEmpty(matches[0].Value))
 						{
-							var oldUrl = matches[0].Value.Replace("\"", "");
-							var newUrl = matches[1].Value.Replace("\t", "").Replace("\"", "");
-							var redirectType = Convert.ToInt32(matches[2].Value.Replace("\t", "").Replace("\"", ""));
-							Repository.Insert(oldUrl, newUrl, redirectType);
+							var oldUrl = matches[1].Value.Replace("\"", "");
+							var newUrl = matches[2].Value.Replace("\t", "").Replace("\"", "");
+							var redirectType = matches[3].Value.Replace("\t", "").Replace("\"", "").Equals("301");
+						    var siteName = ItemUtil.ProposeValidItemName(matches[0].Value);
+							Repository.Insert(siteName, oldUrl, newUrl, MainUtil.GetBool(redirectType, false));
 						}
 					}
 				}

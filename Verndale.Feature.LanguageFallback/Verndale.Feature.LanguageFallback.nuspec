@@ -10,6 +10,10 @@
 	<requireLicenseAcceptance>false</requireLicenseAcceptance>
 	<summary>Sitecore Helix library to extend Sitecore's Language Fallback feature.</summary>
 	<description>
+Compatible with Sitecore 9.1
+Requires Sitecore 9.1
+Requires .NET Framework 4.7.1
+
 Verndale Helix Catalog is a collection of utilities for the Sitecore .NET CMS.
 The Feature.LanguageFallback library contains a number of user efficiency enhancements for Sitecore's Language Fallback feature.
 
@@ -30,7 +34,7 @@ HttpRequestBegin Pipeline processor that changes Sitecore's default language res
 a language flag will be configured to serve the site's default language.
 
 
-AlternateLanguageLinksController: 
+AlternateLanguageLinksController:
 Will populate your HTML Header with canonical (local) links for the current Item in all languages supported by the context site.
 
 Language Fallback Commands:
@@ -42,11 +46,8 @@ Installed in the Ribbon area of the Content Editor:
 
 
 This library requires the installation of a Sitecore Package (included). This should happen automatically when you build and deploy your project.
-
-Configured for use with Sitecore 9.0.
-Requires Sitecore 9.0 NuGet packages, available here: https://sitecore.myget.org/F/sc-packages/api/v3/index.json
 	</description>
-	<releaseNotes>Package installer will now only run on CM style environments.</releaseNotes>
+	<releaseNotes>Compiled for Sitecore 9.1</releaseNotes>
 	<copyright>Copyright 2018</copyright>
 	<tags>Sitecore, Sitecore Helix, Sitecore Habitat, Sitecore Feature</tags>
   </metadata>

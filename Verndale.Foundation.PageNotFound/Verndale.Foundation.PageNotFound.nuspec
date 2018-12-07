@@ -10,6 +10,10 @@
 	<requireLicenseAcceptance>false</requireLicenseAcceptance>
 	<summary>Sitecore Helix library for managing site-specific 404 pages.</summary>
 	<description>
+Compatible with Sitecore 9.1
+Requires Sitecore 9.1
+Requires .NET Framework 4.7.1
+
 Verndale Helix Catalog is a collection of utilities for the Sitecore .NET CMS.
 The Foundation.PageNotFound library centralizes control of 404 pages and the process of redirecting to those 404 pages.
 
@@ -46,13 +50,10 @@ HttpRequestEnd Pipeline Processor: Set404StatusCode
 Assuming the site is configured with the ID of the "not found page" this processor will detect that the context item
 is the 404 page and will add the 404 code to the Response.
 
-Please note that the customizations in this processor will only run for databases and sites as configured below, and should intentionally not
-run for Sitecore system sites. (see sitesToIgnore below).
-
-Configured for use with Sitecore 9.0.
-Requires Sitecore 9.0 NuGet packages, available here: https://sitecore.myget.org/F/sc-packages/api/v3/index.json
+Please note that the customizations in this processor will only run for databases and sites as configured, and should intentionally not
+run for Sitecore system sites.
 	</description>
-	<releaseNotes>Added "master" to the ignored database list.</releaseNotes>
+	<releaseNotes>Compiled for Sitecore 9.1</releaseNotes>
 	<copyright>Copyright 2018</copyright>
 	<tags>Sitecore, Sitecore Helix, Sitecore Habitat, Sitecore Feature</tags>
   </metadata>

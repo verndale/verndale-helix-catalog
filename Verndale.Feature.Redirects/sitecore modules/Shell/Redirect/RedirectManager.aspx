@@ -68,12 +68,14 @@
 							indentcellwidth="22" loadingpanelclienttemplateid="LoadingFeedbackTemplate" loadingpanelposition="MiddleCenter"
 							width="100%" height="100%" runat="server" xmlns:ca="http://www.sitecore.net/xhtml">
 							<levels>
-								<ca:gridlevel datakeyfield="ID" showtableheading="false" showselectorcells="false" rowcssclass="Row" columnreorderindicatorimageurl="reorder.gif" datacellcssclass="DataCell" headingcellcssclass="HeadingCell" headingcellhovercssclass="HeadingCellHover" headingcellactivecssclass="HeadingCellActive" headingrowcssclass="HeadingRow" headingtextcssclass="HeadingCellText" selectedrowcssclass="SelectedRow" groupheadingcssclass="GroupHeading" sortascendingimageurl="asc.gif" sortdescendingimageurl="desc.gif" sortimagewidth="13" sortimageheight="13">
+								<ca:gridlevel datakeyfield="ItemId" showtableheading="false" showselectorcells="false" rowcssclass="Row" columnreorderindicatorimageurl="reorder.gif" datacellcssclass="DataCell" headingcellcssclass="HeadingCell" headingcellhovercssclass="HeadingCellHover" headingcellactivecssclass="HeadingCellActive" headingrowcssclass="HeadingRow" headingtextcssclass="HeadingCellText" selectedrowcssclass="SelectedRow" groupheadingcssclass="GroupHeading" sortascendingimageurl="asc.gif" sortdescendingimageurl="desc.gif" sortimagewidth="13" sortimageheight="13">
 								<columns>
-									<ca:gridcolumn datafield="ID" visible="false" issearchable="false" />
+									<ca:gridcolumn datafield="ItemId" visible="false" issearchable="false" />
+								    <ca:gridcolumn datafield="SiteName" allowsorting="true" issearchable="false" allowgrouping="true" sorteddatacellcssclass="SortedDataCell" headingtext="Site Name" />
 									<ca:gridcolumn datafield="OldUrl" allowsorting="true" issearchable="true" allowgrouping="false" sorteddatacellcssclass="SortedDataCell" headingtext="Old URL" />
 									<ca:gridcolumn datafield="NewUrl" allowsorting="true" issearchable="true" allowgrouping="false" sorteddatacellcssclass="SortedDataCell" headingtext="New URL" />
-									<ca:gridcolumn datafield="RedirectType" allowsorting="true" issearchable="false" allowgrouping="true" sorteddatacellcssclass="SortedDataCell" headingtext="Type" />
+									<ca:gridcolumn datafield="RedirectTypeString" allowsorting="true" issearchable="false" allowgrouping="true" sorteddatacellcssclass="SortedDataCell" headingtext="Type" />
+								    <ca:gridcolumn datafield="RedirectType" Visible="False" />
 								</columns>
 								</ca:gridlevel>
 							</levels>

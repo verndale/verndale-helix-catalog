@@ -16,9 +16,17 @@
       <ContinuationManager runat="server" />
 
       <div style="padding:0px 0px 0px 0px">
-        <Literal Text="Please enter Old URL and New URL to create a new redirect.&lt;br/&gt;&lt;br/&gt;The Old URL must be a full URL starting from http:// i.e. '&lt;b&gt;http://www.domain.com/old_page.htm&lt;/b&gt;' or '&lt;b&gt;http://domain.com/old_page.php&lt;/b&gt;'.&lt;br/&gt;The new URL can be either full URL i.e. '&lt;b&gt;http://www.domain.com/new-page&lt;/b&gt;' or root relative i.e. '&lt;b&gt;/new-page&lt;/b&gt;'." runat="server"/>
+        <Literal Text="The URLs need to be relative i.e. '&lt;b&gt;/new-page&lt;/b&gt;'." runat="server"/>
       </div>
 
+      <div style="padding:8px 0px 0px 0px">
+        <Literal Text="Site Name:" runat="server"/>
+      </div>
+
+      <div style="padding:4px 0px 0px 0px">
+        <asp:TextBox ID="SiteName" Width="100%" runat="server"/>
+      </div>
+      
       <div style="padding:8px 0px 0px 0px">
         <Literal Text="Old URL:" runat="server"/>
       </div>

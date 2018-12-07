@@ -10,6 +10,10 @@
 	<requireLicenseAcceptance>false</requireLicenseAcceptance>
 	<summary>Sitecore Helix library that adds new Fields to Sitecore.</summary>
 	<description>
+Compatible with Sitecore 9.1
+Requires Sitecore 9.1
+Requires .NET Framework 4.7.1
+		
 Verndale Helix Catalog is a collection of utilities for the Sitecore .NET CMS.
 The Foundation.Fields library introduces a few new field types to Sitecore.
 
@@ -25,13 +29,8 @@ Installation
 
 This library requires the installation of a Sitecore package (included). this should happen automatically when you build and deploy
 your project.
-
-
-Configured for use with Sitecore 9.0.
-Requires Sitecore 9.0 NuGet packages, available here: https://sitecore.myget.org/F/sc-packages/api/v3/index.json
-Requires the installation of the included Package.
 	</description>
-	<releaseNotes>Updated supporting NuGet packages.</releaseNotes>
+	<releaseNotes>Compiled for Sitecore 9.1</releaseNotes>
 	<copyright>Copyright 2018</copyright>
 	<tags>Sitecore, Sitecore Helix, Sitecore Habitat, Sitecore Feature</tags>
   </metadata>

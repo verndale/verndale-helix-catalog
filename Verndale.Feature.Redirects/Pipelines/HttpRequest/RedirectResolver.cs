@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Web;
 using Sitecore;
 using Sitecore.Diagnostics;
@@ -20,13 +21,13 @@ namespace Verndale.Feature.Redirects.Pipelines.HttpRequest
 				return;
 			}
 
-
-			string url = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Path);
+            Uri url = new Uri(HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Path));
+		    var localPath = url.LocalPath;
 
 			Log.Debug($"Verndale RedirectResolver processing: '{url}'", this);
 
 
-			CheckRedirect(url);
+			CheckRedirect(localPath);
 		}
 
 		protected override void Defer(HttpRequestArgs args)
@@ -57,16 +58,17 @@ namespace Verndale.Feature.Redirects.Pipelines.HttpRequest
 			}
 
 			Log.Info($"Verndale RedirectResolver: redirecting from {sourceUrl} to {redirect.NewUrl}", this);
+		    string hostname = Regex.Replace(Context.Site.TargetHostName, @"\/$", string.Empty); //Remove last slash in url if present
+                                                                                                
+		    if (redirect.RedirectType)
+		    {
+		        HttpContext.Current.Response.RedirectPermanent($"{hostname}{redirect.NewUrl}", true);
 
-			switch (redirect.RedirectType)
-			{
-				case 301:
-					HttpContext.Current.Response.RedirectPermanent(redirect.NewUrl, true);
-					break;
-				case 302:
-					Sitecore.Web.WebUtil.Redirect(redirect.NewUrl);
-					break;
-			}
-		}
+		    }
+		    else
+            {
+                Sitecore.Web.WebUtil.Redirect($"{hostname}{redirect.NewUrl}");
+            }
+        }
 	}
 }

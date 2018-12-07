@@ -10,6 +10,10 @@
 	<requireLicenseAcceptance>false</requireLicenseAcceptance>
 	<summary>Sitecore Helix library providing Site-specific LinkProviders and LinkProvider configurations.</summary>
 	<description>
+Compatible with Sitecore 9.1
+Requires Sitecore 9.1
+Requires .NET Framework 4.7.1
+
 Verndale Helix Catalog is a collection of utilities for the Sitecore .NET CMS.
 The Foundation.Linking library contains a SwitchingLinkManager that allows the developer to specify discrete LinkProviders (and their configuration settings)
 on a site-by-site basis while maintaining support for the default Sitecore LinkProvider for Sitecore console sites.
@@ -18,12 +22,9 @@ By itself, this library simply installs and configures the SwitchingLinkManager.
 LinkProvider settings as needed.
 
 This library is transcribed with permission from JammyKam's original code here: https://jammykam.wordpress.com/2017/09/22/switching-link-manager/
-
-Configured for use with Sitecore 8.2+
-Requires Sitecore NuGet packages, available here: https://sitecore.myget.org/F/sc-packages/api/v3/index.json
 	</description>
-	<releaseNotes>Relaxed constraints on Microsoft DependencyInjection libraries</releaseNotes>
+	<releaseNotes>Compiled for Sitecore 9.1</releaseNotes>
 	<copyright>Copyright 2018</copyright>
-	<tags>Sitecore, Sitecore Helix, Sitecore Habitat, Sitecore Feature</tags>
+	<tags>Sitecore, Sitecore Helix, Sitecore Foundation</tags>
   </metadata>
 </package>

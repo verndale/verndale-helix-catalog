@@ -1,6 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using Constellation.Foundation.ModelMapping;
+using Sitecore;
+using Sitecore.ContentSearch;
+using Sitecore.ContentSearch.Linq;
+using Sitecore.ContentSearch.Linq.Extensions;
+using Sitecore.ContentSearch.SearchTypes;
+using Sitecore.Data;
+using Sitecore.Data.Items;
+using Sitecore.Data.Serialization;
 
 namespace Verndale.Feature.Redirects.Data
 {
@@ -9,77 +19,83 @@ namespace Verndale.Feature.Redirects.Data
 	/// </summary>
 	public static class Repository
 	{
-		/// <summary>
-		/// Gets all redirects.
-		/// </summary>
-		/// <returns></returns>
-		public static List<UrlRedirect> GetAll()
+	    
+        /// <summary>
+        /// Gets all redirects.
+        /// </summary>
+        /// <returns></returns>
+        public static List<UrlRedirect> GetAll()
 		{
-			using (DataContext db = BuildRedirectContext())
-			{
-				return db.UrlRedirects.ToList();
-			}
+		    ISearchIndex index = BuildSearchIndex();
+		    using (IProviderSearchContext context = index.CreateSearchContext())
+		    {
+		        var search = context.GetQueryable<UrlRedirect>()
+                    .Where(IsRedirect<UrlRedirect>());
+		        return search.ToList();
+		    }
 		}
 
 		/// <summary>
 		/// Finds a redirect by id.
 		/// </summary>
-		public static UrlRedirect GetById(int id)
+		public static UrlRedirect GetById(string id)
 		{
-			using (DataContext db = BuildRedirectContext())
-			{
-				return db.UrlRedirects.Find(id);
-			}
-		}
-
-		/// <summary>
-		/// Deletes a redirect by ID.
-		/// </summary>
-		public static void Delete(int id)
-		{
-			using (DataContext db = BuildRedirectContext())
-			{
-				var entity = db.UrlRedirects.Find(id);
-				if (entity != null)
-				{
-					db.UrlRedirects.Remove(entity);
-					db.SaveChanges();
-				}
-			}
-		}
+		    Item redirect = Constants.Dbs.Database.GetItem(id);
+		    if (redirect == null)
+		    {
+		        return null;
+		    }
+		    return new UrlRedirect()
+		    {
+		        SiteName = redirect[Constants.FieldNames.SiteNameField],
+                OldUrl = redirect[Constants.FieldNames.OldUrlField],
+                NewUrl = redirect[Constants.FieldNames.NewUrlField],
+                RedirectType = MainUtil.GetBool(redirect[Constants.FieldNames.TypeField], false)
+            };
+        }
 
 		/// <summary>
 		/// Deletes a redirect by ID.
 		/// </summary>
 		public static void Delete(string id)
 		{
-			int idInt = -1;
-			if (!int.TryParse(id, out idInt))
-			{
-				throw new FormatException(string.Format("Value '{0}' for parameter 'id' could not be converted to an integer.", id));
-			}
+		    Item redirect = Constants.Dbs.Database.GetItem(id);
 
-			Delete(idInt);
-		}
+		    if (redirect == null)
+		    {
+		        return;
+		    }
+
+		    if (Sitecore.Configuration.Settings.RecycleBinActive)
+		    {
+		        redirect.Recycle();
+            }
+		    else
+		    {
+		        redirect.Delete();
+            }
+        }
 
 		/// <summary>
 		/// Deletes all redirects.
 		/// </summary>
 		public static void DeleteAll()
 		{
-			using (DataContext db = BuildRedirectContext())
-			{
-				db.UrlRedirects.RemoveRange(db.UrlRedirects);
-				db.SaveChanges();
-			}
+		    Item redirectBucket = Constants.Dbs.Database.GetItem(Constants.Ids.RedirectBucketItemId);
+		    redirectBucket?.DeleteChildren();
 		}
 
 		/// <summary>
 		/// Inserts a new redirect.
 		/// </summary>
-		public static int Insert(string oldUrl, string newUrl, int type)
+		public static ID Insert(string siteName, string oldUrl, string newUrl, bool type)
 		{
-			if (string.IsNullOrWhiteSpace(oldUrl))
+		    if (string.IsNullOrWhiteSpace(siteName))
+		    {
+		        throw new ArgumentException("siteName");
+		    }
+
+            if (string.IsNullOrWhiteSpace(oldUrl))
 			{
 				throw new ArgumentException("oldUrl");
 			}
@@ -89,26 +105,28 @@ namespace Verndale.Feature.Redirects.Data
 				throw new ArgumentException("newUrl");
 			}
 
-			var entity = new UrlRedirect()
-			{
-				OldUrl = oldUrl,
-				NewUrl = newUrl,
-				RedirectType = type
-			};
+		    Item redirectBucket = Constants.Dbs.Database.GetItem(Constants.Ids.RedirectBucketItemId);
 
-			using (DataContext db = BuildRedirectContext())
-			{
-				db.UrlRedirects.Add(entity);
-				db.SaveChanges();
-			}
+		    if (redirectBucket == null)
+		    {
+		        return null;
+		    }
 
-			return entity.Id;
+		    Item newItem = redirectBucket.Add(ItemUtil.ProposeValidItemName(siteName), new TemplateID(Constants.Ids.RedirectItemTemplateId));
+		    newItem.Editing.BeginEdit();
+		    newItem.Fields[Constants.FieldNames.SiteNameField].Value = siteName;
+		    newItem.Fields[Constants.FieldNames.OldUrlField].Value = oldUrl;
+		    newItem.Fields[Constants.FieldNames.NewUrlField].Value = newUrl;
+		    newItem.Fields[Constants.FieldNames.TypeField].Value = System.Convert.ToInt32(type).ToString();
+            newItem.Editing.EndEdit();
+
+			return newItem.ID;
 		}
 
 		/// <summary>
 		/// Updates an existing redirect.
 		/// </summary>
-		public static void Update(int id, string oldUrl, string newUrl, int? type)
+		public static void Update(ID id, string siteName, string oldUrl, string newUrl, bool type)
 		{
 			if (string.IsNullOrWhiteSpace(oldUrl))
 			{
@@ -120,18 +138,25 @@ namespace Verndale.Feature.Redirects.Data
 				throw new ArgumentException("newUrl");
 			}
 
-			using (DataContext db = BuildRedirectContext())
-			{
-				var entity = db.UrlRedirects.Find(id);
-				if (entity != null)
-				{
-					entity.OldUrl = oldUrl;
-					entity.NewUrl = newUrl;
-					entity.RedirectType = type;
+		    if (string.IsNullOrWhiteSpace(siteName))
+		    {
+		        throw new ArgumentException("siteName");
+		    }
 
-					db.SaveChanges();
-				}
-			}
+            Item redirect = Constants.Dbs.Database.GetItem(id);
+
+		    if (redirect == null)
+		    {
+		        return;
+		    }
+
+            redirect.Editing.BeginEdit();
+		    redirect.Name = ItemUtil.ProposeValidItemName(siteName);
+		    redirect.Fields[Constants.FieldNames.SiteNameField].Value = siteName;
+		    redirect.Fields[Constants.FieldNames.OldUrlField].Value = oldUrl;
+		    redirect.Fields[Constants.FieldNames.NewUrlField].Value = newUrl;
+		    redirect.Fields[Constants.FieldNames.TypeField].Value = System.Convert.ToInt32(type).ToString();
+		    redirect.Editing.EndEdit();
 		}
 
 		/// <summary>
@@ -144,26 +169,28 @@ namespace Verndale.Feature.Redirects.Data
 				return false;
 			}
 
-			using (DataContext db = BuildRedirectContext())
-			{
-				return db.UrlRedirects.Any(x => x.OldUrl == oldUrl);
-			}
+		    ISearchIndex index = BuildSearchIndex();
+		    using (IProviderSearchContext context = index.CreateSearchContext())
+		    {
+		        return context.GetQueryable<UrlRedirect>().Where(IsRedirect<UrlRedirect>()).Any(x => x.OriginalUrlString == oldUrl);
+		    }
 		}
 
 		/// <summary>
 		/// Checks if the old url exists.
 		/// </summary>
-		public static bool CheckUrlExists(int id, string oldUrl)
+		public static bool CheckUrlExists(ID id, string oldUrl)
 		{
 			if (string.IsNullOrWhiteSpace(oldUrl))
 			{
 				return false;
 			}
 
-			using (DataContext db = BuildRedirectContext())
-			{
-				return db.UrlRedirects.Any(x => x.Id != id && x.OldUrl == oldUrl);
-			}
+		    ISearchIndex index = BuildSearchIndex();
+		    using (IProviderSearchContext context = index.CreateSearchContext())
+		    {
+		        return context.GetQueryable<UrlRedirect>().Where(IsRedirect<UrlRedirect>()).Any(x => x.OriginalUrlString == oldUrl && x.ItemId!=id);
+		    }
 		}
 
 		/// <summary>
@@ -176,31 +203,23 @@ namespace Verndale.Feature.Redirects.Data
 				return null;
 			}
 
-			using (DataContext db = BuildRedirectContext())
-			{
+		    ISearchIndex index = BuildSearchIndex();
+		    using (IProviderSearchContext context = index.CreateSearchContext())
+            {
 				UrlRedirect redirect = null;
 
 				if (performEndsWithWildcard)
 				{
-					// perform a SQL like. Swap the * in the oldURL database with a SQL wildcard %
+				    List<UrlRedirect> potentialResults = context.GetQueryable<UrlRedirect>()
+				        .Where(IsRedirect<UrlRedirect>())
+                        .Where(x => x.NoWildCardUrl!=String.Empty).ToList();
 
-					/*                     
-					   SELECT *
-						FROM [dbo].[application_UrlRedirects] u
-						where @RequestURL Like REPLACE(u.OldUrl, '*', '%') 
-					 */
-
-					// Execute SQL, and work in memory.                
-					List<UrlRedirect> potentialResults = db.UrlRedirects
-						.Where(sqlRow => requestUrl.Contains(sqlRow.OldUrl.Replace("*", "")))
-						.ToList();
-
-					// Ensure the redirect ends with wildcard.
-					redirect = potentialResults.FirstOrDefault(r => r.OldUrl.EndsWith("*"));
+				    redirect = potentialResults.FirstOrDefault(x => requestUrl.Contains(x.NoWildCardUrl));
 				}
 				else
 				{
-					redirect = db.UrlRedirects.FirstOrDefault(x => x.OldUrl == requestUrl);
+					redirect = context.GetQueryable<UrlRedirect>().Where(IsRedirect<UrlRedirect>())
+                        .FirstOrDefault(x => x.OriginalUrlString == requestUrl);
 				}
 
 				return redirect;
@@ -217,10 +236,11 @@ namespace Verndale.Feature.Redirects.Data
 				return null;
 			}
 
-			using (DataContext db = BuildRedirectContext())
-			{
-				return db.UrlRedirects.FirstOrDefault(x => x.NewUrl == newUrl);
-			}
+		    ISearchIndex index = BuildSearchIndex();
+		    using (IProviderSearchContext context = index.CreateSearchContext())
+		    {
+		        return context.GetQueryable<UrlRedirect>().Where(IsRedirect<UrlRedirect>()).FirstOrDefault(x => x.NewUrl == newUrl);
+		    }
 		}
 
 		/// <summary>
@@ -233,23 +253,30 @@ namespace Verndale.Feature.Redirects.Data
 				return null;
 			}
 
-			using (DataContext db = BuildRedirectContext())
-			{
-				return db.UrlRedirects.FirstOrDefault(x => x.OldUrl == oldUrl);
-			}
+		    ISearchIndex index = BuildSearchIndex();
+		    using (IProviderSearchContext context = index.CreateSearchContext())
+		    {
+		        return context.GetQueryable<UrlRedirect>().Where(IsRedirect<UrlRedirect>()).FirstOrDefault(x=>x.OriginalUrlString == oldUrl);
+		    }
 		}
 
 		#region infrastructure
 
-		/// <summary>
-		/// Builds the redirect SQL Entities context.
-		/// </summary>
-		private static DataContext BuildRedirectContext()
-		{
-			return new DataContext();
-		}
+	    /// <summary>
+	    /// Builds the search index.
+	    /// </summary>
+	    private static ISearchIndex BuildSearchIndex()
+	    {
+	        return ContentSearchManager.GetIndex("sitecore_master_index");
+	    }
+        
+	    private static Expression<Func<T, bool>> IsRedirect<T>() where T : SearchResultItem
+	    {
+	        return searchResultItem => searchResultItem.TemplateId == Constants.Ids.RedirectItemTemplateId
+	                                   && searchResultItem.Paths.Contains(Constants.Ids.RedirectBucketItemId);
+	    }
+        #endregion
 
-		#endregion
-
-	}
+    }
 }
+

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.Text.RegularExpressions;
 using System.Web;
 using Sitecore;
+using Sitecore.Data;
 using Sitecore.Diagnostics;
 using Sitecore.Globalization;
 using Sitecore.Shell.Framework.Commands;
@@ -48,8 +50,8 @@ namespace Verndale.Feature.Redirects.Commands
 
 			if (args.IsPostBack)
 			{
-				string strid = args.Parameters["ID"];
-				int id = Convert.ToInt32(strid);
+				ID id = new ID(args.Parameters["ID"]);
+				//int id = Convert.ToInt32(strid);
 				if (!args.HasResult)
 				{
 					return;
@@ -67,13 +69,20 @@ namespace Verndale.Feature.Redirects.Commands
 				var oldValue = values[1];
 				var newValue = values[2];
 				var encodedOldValue = HttpUtility.HtmlEncode(oldValue);
+			    var siteName = values[3];
 
-				if (!Repository.CheckUrlExists(id, oldValue) && !Repository.CheckUrlExists(id, encodedOldValue)) // check if the old redirect exists here
+			    if (Regex.IsMatch(oldValue, Data.Constants.HostNameRegex) || Regex.IsMatch(newValue, Data.Constants.HostNameRegex))
+			    {
+			        SheerResponse.Alert(Translate.Text("Incorrect URL. Only partial URLs are allowed"));
+			        return;
+			    }
+
+                if (!Repository.CheckUrlExists(id, oldValue) && !Repository.CheckUrlExists(id, encodedOldValue)) // check if the old redirect exists here
 				{
 					try
 					{
 						//values[1] = values[1].Replace("%20", " ");
-						Repository.Update(id, oldValue, newValue, Convert.ToInt32(values[0]));
+						Repository.Update(id, siteName, oldValue, newValue, MainUtil.GetBool(Convert.ToInt32(values[0]), false));
 
 						ajaxScriptManager.Dispatch("redirectmanager:refresh");
 						return;

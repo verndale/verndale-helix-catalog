@@ -10,22 +10,22 @@
 	<requireLicenseAcceptance>false</requireLicenseAcceptance>
 	<summary>Sitecore Helix library for making URL Redirects easy to maintain within Sitecore.</summary>
 	<description>
+Compatible with Sitecore 9.1
+Requires Sitecore 9.1
+Requires .NET Framework 4.7.1
+
 Verndale Helix Catalog is a collection of utilities for the Sitecore .NET CMS.
-The Feature.Redirects library solves the frequently occurring problem of managing a collection of urls that must be redirected to other urls. Current solutions involve
-IIS URL Rewrite module, which is not author-friendly, and using Sitecore Aliases, which is not scalable. This package uses a very small custom database to maintain
-the list of rewrite rules. The application is accessed from within the Sitcore desktop and uses Sitecore's native Sheer UI components.
-		
-Redirect rules are implemented through an HttpRequestBegin Pipeline processor that reviews would-be 404 requests for matching redirects and handles the response if
-there is a match
+The Feature.Redirects library solves the frequently occurring problem of managing a collection of urls that must be redirected to other urls. Current solutions involve IIS URL Rewrite module, which is not author-friendly, and using Sitecore Aliases, which is not scalable. The application is accessed from within the Sitcore desktop and uses Sitecore's native Sheer UI components.
+
+Redirect rules are implemented through an HttpRequestBegin Pipeline processor that reviews would-be 404 requests for matching redirects and handles the response if there is a match.
+
+Note: This version uses an Item Bucket and the Search Index to store redirects. The redirect pipeline queries the MASTER search index.
 
 Installation
 1. Add this NuGet package to a web application project in your Sitecore solution.
-2. Build and Deploy your project to a target environment
+2. Build and Deploy your project to a target environment.
 
 This library requires a Sitecore Package (included). The package should install automatically when you build and deploy your project.
-
-Configured for use with Sitecore 9.0.
-Requires Sitecore 9.0 NuGet packages, available here: https://sitecore.myget.org/F/sc-packages/api/v3/index.json
 	</description>
 	<releaseNotes>Ensured the package manager only runs on CM type environments.</releaseNotes>
 	<copyright>Copyright 2018</copyright>

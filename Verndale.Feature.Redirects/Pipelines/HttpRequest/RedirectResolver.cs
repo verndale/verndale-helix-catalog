@@ -21,8 +21,8 @@ namespace Verndale.Feature.Redirects.Pipelines.HttpRequest
 				return;
 			}
 
-            Uri url = new Uri(HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Path));
-		    var localPath = url.LocalPath;
+			Uri url = new Uri(HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Path));
+			var localPath = url.LocalPath;
 
 			Log.Debug($"Verndale RedirectResolver processing: '{url}'", this);
 
@@ -58,17 +58,17 @@ namespace Verndale.Feature.Redirects.Pipelines.HttpRequest
 			}
 
 			Log.Info($"Verndale RedirectResolver: redirecting from {sourceUrl} to {redirect.NewUrl}", this);
-		    string hostname = Regex.Replace(Context.Site.TargetHostName, @"\/$", string.Empty); //Remove last slash in url if present
-                                                                                                
-		    if (redirect.RedirectType)
-		    {
-		        HttpContext.Current.Response.RedirectPermanent($"{hostname}{redirect.NewUrl}", true);
+			string hostname = Regex.Replace(Context.Site.TargetHostName, @"\/$", string.Empty); //Remove last slash in url if present
 
-		    }
-		    else
-            {
-                Sitecore.Web.WebUtil.Redirect($"{hostname}{redirect.NewUrl}");
-            }
-        }
+			if (redirect.RedirectType)
+			{
+				HttpContext.Current.Response.RedirectPermanent($"{hostname}{redirect.NewUrl}", true);
+
+			}
+			else
+			{
+				Sitecore.Web.WebUtil.Redirect($"{hostname}{redirect.NewUrl}");
+			}
+		}
 	}
 }

@@ -29,6 +29,20 @@ namespace Verndale.Feature.Redirects.UI
 		protected HtmlForm RedirectManagerForm;
 		protected Grid Redirects;
 
+		private Repository _repository;
+		protected Repository Repository
+		{
+			get
+			{
+				if (_repository == null)
+				{
+					_repository = new Repository("sitecore_master_index");
+				}
+
+				return _repository;
+			}
+		}
+
 		// Methods
 		private static void Current_OnExecute(object sender, AjaxCommandEventArgs args)
 		{

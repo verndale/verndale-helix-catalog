@@ -26,8 +26,27 @@ namespace Verndale.Feature.Redirects.Pipelines.HttpRequest
 
 			Log.Debug($"Verndale RedirectResolver processing: '{url}'", this);
 
+			var redirect = CheckRedirect(localPath);
 
-			CheckRedirect(localPath);
+			if (string.IsNullOrEmpty(redirect?.NewUrl))
+			{
+				Log.Debug($"Verndale RedirectResolver: No redirect for {localPath}", this);
+				return;
+			}
+
+			string hostname = Regex.Replace(Context.Site.TargetHostName, @"\/$", string.Empty); //Remove last slash in url if present
+
+			if (redirect.IsPermanent)
+			{
+				Log.Info($"Verndale RedirectResolver: permanently redirecting from {localPath} to {redirect.NewUrl}", this);
+				HttpContext.Current.Response.RedirectPermanent($"{hostname}{redirect.NewUrl}", true);
+
+			}
+			else
+			{
+				Log.Info($"Verndale RedirectResolver: basic redirecting from {localPath} to {redirect.NewUrl}", this);
+				Sitecore.Web.WebUtil.Redirect($"{hostname}{redirect.NewUrl}");
+			}
 		}
 
 		protected override void Defer(HttpRequestArgs args)
@@ -40,35 +59,21 @@ namespace Verndale.Feature.Redirects.Pipelines.HttpRequest
 		/// <summary>
 		/// Checks the redirect.
 		/// </summary>
-		private void CheckRedirect(string sourceUrl)
+		private UrlRedirect CheckRedirect(string sourceUrl)
 		{
+			var site = Sitecore.Context.Site.SiteInfo;
+			var repository = new Repository("sitecore_master_index");
+
 			// Check for the redirect without a wildcard.
-			var redirect = Repository.GetNewUrl(sourceUrl, false);
+			var redirect = repository.GetNewUrl(site, sourceUrl, false);
 
 			if (redirect == null)
 			{
 				// Check for redirect WITH wildcard.
-				redirect = Repository.GetNewUrl(sourceUrl, true);
+				redirect = repository.GetNewUrl(site, sourceUrl, true);
 			}
 
-			if (string.IsNullOrEmpty(redirect?.NewUrl))
-			{
-				Log.Debug($"Verndale RedirectResolver: No redirect for {sourceUrl}", this);
-				return;
-			}
-
-			Log.Info($"Verndale RedirectResolver: redirecting from {sourceUrl} to {redirect.NewUrl}", this);
-			string hostname = Regex.Replace(Context.Site.TargetHostName, @"\/$", string.Empty); //Remove last slash in url if present
-
-			if (redirect.RedirectType)
-			{
-				HttpContext.Current.Response.RedirectPermanent($"{hostname}{redirect.NewUrl}", true);
-
-			}
-			else
-			{
-				Sitecore.Web.WebUtil.Redirect($"{hostname}{redirect.NewUrl}");
-			}
+			return redirect;
 		}
 	}
 }

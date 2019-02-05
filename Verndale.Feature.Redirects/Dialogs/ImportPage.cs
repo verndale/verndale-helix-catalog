@@ -7,7 +7,6 @@ using Sitecore.Controls;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Verndale.Feature.Redirects.Data;
-using Convert = System.Convert;
 
 namespace Verndale.Feature.Redirects.Dialogs
 {
@@ -16,6 +15,20 @@ namespace Verndale.Feature.Redirects.Dialogs
 		protected FileUpload fileImport;
 		protected Button Upload;
 		protected Label lblSuccessMessage;
+
+		private Repository _repository;
+		protected Repository Repository
+		{
+			get
+			{
+				if (_repository == null)
+				{
+					_repository = new Repository("sitecore_master_index");
+				}
+
+				return _repository;
+			}
+		}
 		protected override void OnLoad(EventArgs e)
 		{
 
@@ -53,7 +66,7 @@ namespace Verndale.Feature.Redirects.Dialogs
 							var oldUrl = matches[1].Value.Replace("\"", "");
 							var newUrl = matches[2].Value.Replace("\t", "").Replace("\"", "");
 							var redirectType = matches[3].Value.Replace("\t", "").Replace("\"", "").Equals("301");
-						    var siteName = ItemUtil.ProposeValidItemName(matches[0].Value);
+							var siteName = ItemUtil.ProposeValidItemName(matches[0].Value);
 							Repository.Insert(siteName, oldUrl, newUrl, MainUtil.GetBool(redirectType, false));
 						}
 					}

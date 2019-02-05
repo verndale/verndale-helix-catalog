@@ -19,6 +19,21 @@ namespace Verndale.Feature.Redirects.Commands
 	[Serializable]
 	public class Edit : Command, ISupportsContinuation
 	{
+		private Repository _repository;
+		protected Repository Repository
+		{
+			get
+			{
+				if (_repository == null)
+				{
+					_repository = new Repository("sitecore_master_index");
+				}
+
+				return _repository;
+			}
+		}
+
+
 		public override void Execute(CommandContext context)
 		{
 			Assert.ArgumentNotNull(context, "context");
@@ -69,15 +84,15 @@ namespace Verndale.Feature.Redirects.Commands
 				var oldValue = values[1];
 				var newValue = values[2];
 				var encodedOldValue = HttpUtility.HtmlEncode(oldValue);
-			    var siteName = values[3];
+				var siteName = values[3];
 
-			    if (Regex.IsMatch(oldValue, Data.Constants.HostNameRegex) || Regex.IsMatch(newValue, Data.Constants.HostNameRegex))
-			    {
-			        SheerResponse.Alert(Translate.Text("Incorrect URL. Only partial URLs are allowed"));
-			        return;
-			    }
+				if (Regex.IsMatch(oldValue, Data.Constants.HostNameRegex))
+				{
+					SheerResponse.Alert(Translate.Text("Only partial URLs are allowed in the Old URL field."));
+					return;
+				}
 
-                if (!Repository.CheckUrlExists(id, oldValue) && !Repository.CheckUrlExists(id, encodedOldValue)) // check if the old redirect exists here
+				if (!Repository.CheckUrlExists(id, oldValue) && !Repository.CheckUrlExists(id, encodedOldValue)) // check if the old redirect exists here
 				{
 					try
 					{

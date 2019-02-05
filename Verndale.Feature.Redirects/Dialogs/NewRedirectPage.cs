@@ -14,22 +14,22 @@ namespace Verndale.Feature.Redirects.Dialogs
 		protected DropDownList Type;
 		protected TextBox OldUrl;
 		protected TextBox NewUrl;
-	    protected TextBox SiteName;
+		protected TextBox SiteName;
 
-        // Methods
-        protected override void OK_Click()
+		// Methods
+		protected override void OK_Click()
 		{
 			string oldUrl = this.OldUrl.Text.Trim();
 			string newUrl = this.NewUrl.Text.Trim();
-		    string siteName = this.SiteName.Text.Trim();
-            if (string.IsNullOrEmpty(oldUrl) || string.IsNullOrEmpty(newUrl) || string.IsNullOrEmpty(siteName))
+			string siteName = this.SiteName.Text.Trim();
+			if (string.IsNullOrEmpty(oldUrl) || string.IsNullOrEmpty(newUrl) || string.IsNullOrEmpty(siteName))
 			{
 				SheerResponse.Alert("The Old URL, the New URL and the Site name cannot be empty.");
 			}
 			else
 			{
 				SheerResponse.SetDialogValue(
-                    @"{0}|{1}|{2}|{3}".FormatWith(new object[] { this.Type.SelectedValue, oldUrl, newUrl, siteName }));
+					@"{0}|{1}|{2}|{3}".FormatWith(new object[] { this.Type.SelectedValue, oldUrl, newUrl, siteName }));
 				base.OK_Click();
 			}
 		}

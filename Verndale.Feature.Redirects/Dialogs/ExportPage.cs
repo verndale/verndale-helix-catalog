@@ -14,6 +14,24 @@ namespace Verndale.Feature.Redirects.Dialogs
 	{
 		protected Button btndownload;
 		protected Label lblSuccessMessage;
+
+		private Repository _repository;
+		protected Repository Repository
+		{
+			get
+			{
+				if (_repository == null)
+				{
+					_repository = new Repository("sitecore_master_index");
+				}
+
+				return _repository;
+			}
+		}
+
+
+
+
 		protected override void OnLoad(EventArgs e)
 		{
 			Assert.ArgumentNotNull(e, "e");
@@ -47,18 +65,18 @@ namespace Verndale.Feature.Redirects.Dialogs
 						switch (c)
 						{
 							case 0:
-							    columnValue = urlRedirect.SiteName;
-                                break;
+								columnValue = urlRedirect.SiteName;
+								break;
 							case 1:
-							    columnValue = urlRedirect.OldUrl;
-                                break;
-						    case 2:
-						        columnValue = urlRedirect.NewUrl;
-                                break;
-						    default:
-						        columnValue = urlRedirect.RedirectType ? "301" : "302";
-                                break;
-                        }
+								columnValue = urlRedirect.OldUrl;
+								break;
+							case 2:
+								columnValue = urlRedirect.NewUrl;
+								break;
+							default:
+								columnValue = urlRedirect.IsPermanent ? "301" : "302";
+								break;
+						}
 						if (columnValue == null)
 							csvRow.Append("");
 						else

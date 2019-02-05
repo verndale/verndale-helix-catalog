@@ -12,6 +12,20 @@ namespace Verndale.Feature.Redirects.Commands
 	[Serializable]
 	public class ClearAll : Command, ISupportsContinuation
 	{
+		private Repository _repository;
+		protected Repository Repository
+		{
+			get
+			{
+				if (_repository == null)
+				{
+					_repository = new Repository("sitecore_master_index");
+				}
+
+				return _repository;
+			}
+		}
+
 		// Methods
 		public override void Execute(CommandContext context)
 		{

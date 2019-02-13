@@ -63,17 +63,7 @@ namespace Verndale.Feature.Redirects.Pipelines.HttpRequest
 		{
 			var site = Sitecore.Context.Site.SiteInfo;
 			var repository = new Repository("sitecore_master_index");
-
-			// Check for the redirect without a wildcard.
-			var redirect = repository.GetNewUrl(site, sourceUrl, false);
-
-			if (redirect == null)
-			{
-				// Check for redirect WITH wildcard.
-				redirect = repository.GetNewUrl(site, sourceUrl, true);
-			}
-
-			return redirect;
+			return repository.GetNewUrl(site, sourceUrl);
 		}
 	}
 }

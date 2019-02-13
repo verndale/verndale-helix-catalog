@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using Sitecore;
 using Sitecore.ContentSearch;
 using Sitecore.ContentSearch.Linq;
-using Sitecore.ContentSearch.SearchTypes;
 using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
@@ -60,9 +58,10 @@ namespace Verndale.Feature.Redirects.Data
 		{
 			using (IProviderSearchContext context = Index.CreateSearchContext())
 			{
-				var search = context.GetQueryable<UrlRedirect>()
-					.Where(IsRedirect<UrlRedirect>());
-				return search.ToList();
+				IQueryable<UrlRedirect> query = context.GetQueryable<UrlRedirect>();
+				query = query.Filter(i => i.Paths.Contains(Constants.Ids.RedirectBucketItemId))
+					.Filter(i => i.TemplateId == Constants.Ids.RedirectItemTemplateId);
+				return query.ToList();
 			}
 		}
 
@@ -146,8 +145,8 @@ namespace Verndale.Feature.Redirects.Data
 			Item newItem = redirectBucket.Add(ItemUtil.ProposeValidItemName(siteName), new TemplateID(Constants.Ids.RedirectItemTemplateId));
 			newItem.Editing.BeginEdit();
 			newItem.Fields[Constants.FieldNames.SiteNameField].Value = siteName;
-			newItem.Fields[Constants.FieldNames.OldUrlField].Value = oldUrl;
-			newItem.Fields[Constants.FieldNames.NewUrlField].Value = newUrl;
+			newItem.Fields[Constants.FieldNames.OldUrlField].Value = oldUrl.ToLower().Trim();
+			newItem.Fields[Constants.FieldNames.NewUrlField].Value = newUrl.ToLower().Trim();
 			newItem.Fields[Constants.FieldNames.TypeField].Value = System.Convert.ToInt32(type).ToString();
 			newItem.Editing.EndEdit();
 
@@ -184,8 +183,8 @@ namespace Verndale.Feature.Redirects.Data
 			redirect.Editing.BeginEdit();
 			redirect.Name = ItemUtil.ProposeValidItemName(siteName);
 			redirect.Fields[Constants.FieldNames.SiteNameField].Value = siteName;
-			redirect.Fields[Constants.FieldNames.OldUrlField].Value = oldUrl;
-			redirect.Fields[Constants.FieldNames.NewUrlField].Value = newUrl;
+			redirect.Fields[Constants.FieldNames.OldUrlField].Value = oldUrl.ToLower().Trim();
+			redirect.Fields[Constants.FieldNames.NewUrlField].Value = newUrl.ToLower().Trim();
 			redirect.Fields[Constants.FieldNames.TypeField].Value = System.Convert.ToInt32(type).ToString();
 			redirect.Editing.EndEdit();
 		}
@@ -193,7 +192,7 @@ namespace Verndale.Feature.Redirects.Data
 		/// <summary>
 		/// Determines if a redirect exists.
 		/// </summary>
-		public bool RedirectExists(string oldUrl)
+		public bool RedirectExists(string oldUrl, string siteName)
 		{
 			if (string.IsNullOrWhiteSpace(oldUrl))
 			{
@@ -202,14 +201,20 @@ namespace Verndale.Feature.Redirects.Data
 
 			using (IProviderSearchContext context = Index.CreateSearchContext())
 			{
-				return context.GetQueryable<UrlRedirect>().Where(IsRedirect<UrlRedirect>()).Any(x => x.OriginalUrlString == oldUrl);
+				IQueryable<UrlRedirect> query = context.GetQueryable<UrlRedirect>();
+				query = query.Filter(i => i.Paths.Contains(Constants.Ids.RedirectBucketItemId))
+					.Filter(i => i.TemplateId == Constants.Ids.RedirectItemTemplateId)
+					.Filter(i => i.SiteName == siteName);
+
+
+				return query.Any(i => i.OldUrl == oldUrl);
 			}
 		}
 
 		/// <summary>
 		/// Checks if the old url exists.
 		/// </summary>
-		public bool CheckUrlExists(ID id, string oldUrl)
+		public bool CheckUrlExists(ID id, string oldUrl, string siteName)
 		{
 			if (string.IsNullOrWhiteSpace(oldUrl))
 			{
@@ -218,50 +223,33 @@ namespace Verndale.Feature.Redirects.Data
 
 			using (IProviderSearchContext context = Index.CreateSearchContext())
 			{
-				return context.GetQueryable<UrlRedirect>().Where(IsRedirect<UrlRedirect>()).Any(x => x.OriginalUrlString == oldUrl && x.ItemId != id);
+				IQueryable<UrlRedirect> query = context.GetQueryable<UrlRedirect>();
+				query = query.Filter(i => i.Paths.Contains(Constants.Ids.RedirectBucketItemId))
+					.Filter(i => i.TemplateId == Constants.Ids.RedirectItemTemplateId)
+					.Filter(i => i.SiteName == siteName);
+
+
+				return query.Any(i => i.OldUrl == oldUrl && i.ItemId != id);
 			}
 		}
 
 		/// <summary>
 		/// Gets the mapped redirect (i..e. new URL) for the given old / request url.
 		/// </summary>
-		public UrlRedirect GetNewUrl(SiteInfo site, string requestUrl, bool endsWithWildcard)
+		public UrlRedirect GetNewUrl(SiteInfo site, string requestUrl)
 		{
 			Assert.ArgumentNotNull(site, "site");
 			Assert.ArgumentNotNullOrEmpty(requestUrl, "requestUrl");
 
 			using (IProviderSearchContext context = Index.CreateSearchContext())
 			{
-				UrlRedirect redirect = null;
 				IQueryable<UrlRedirect> query = context.GetQueryable<UrlRedirect>();
 				query = query.Filter(i => i.Paths.Contains(Constants.Ids.RedirectBucketItemId))
-							.Filter(i => i.SiteName == site.Name)
-							.Filter(i => i.TemplateId == Constants.Ids.RedirectItemTemplateId);
+					.Filter(i => i.TemplateId == Constants.Ids.RedirectItemTemplateId)
+					.Filter(i => i.SiteName == site.Name);
 
 
-				if (endsWithWildcard)
-				{
-					return query.Filter(i => i.NoWildCardUrl != string.Empty)
-						.FirstOrDefault(i => requestUrl.Contains(i.NoWildCardUrl));
-				}
-
-				return query.FirstOrDefault(i => requestUrl.Contains(i.OldUrl));
-			}
-		}
-
-		/// <summary>
-		/// Checks for the new URL.
-		/// </summary>
-		public UrlRedirect CheckNewRedirect(string newUrl)
-		{
-			if (string.IsNullOrWhiteSpace(newUrl))
-			{
-				return null;
-			}
-
-			using (IProviderSearchContext context = Index.CreateSearchContext())
-			{
-				return context.GetQueryable<UrlRedirect>().Where(IsRedirect<UrlRedirect>()).FirstOrDefault(x => x.NewUrl == newUrl);
+				return query.FirstOrDefault(i => i.OldUrl == requestUrl);
 			}
 		}
 
@@ -277,20 +265,14 @@ namespace Verndale.Feature.Redirects.Data
 
 			using (IProviderSearchContext context = Index.CreateSearchContext())
 			{
-				return context.GetQueryable<UrlRedirect>().Where(IsRedirect<UrlRedirect>()).FirstOrDefault(x => x.OriginalUrlString == oldUrl);
+
+				IQueryable<UrlRedirect> query = context.GetQueryable<UrlRedirect>();
+				query = query.Filter(i => i.Paths.Contains(Constants.Ids.RedirectBucketItemId))
+					.Filter(i => i.TemplateId == Constants.Ids.RedirectItemTemplateId);
+
+				return query.FirstOrDefault(i => i.OldUrl == oldUrl);
 			}
 		}
-
-		#region infrastructure
-
-
-		private static Expression<Func<T, bool>> IsRedirect<T>() where T : SearchResultItem
-		{
-			return searchResultItem => searchResultItem.TemplateId == Constants.Ids.RedirectItemTemplateId
-									   && searchResultItem.Paths.Contains(Constants.Ids.RedirectBucketItemId);
-		}
-		#endregion
-
 	}
 }
 

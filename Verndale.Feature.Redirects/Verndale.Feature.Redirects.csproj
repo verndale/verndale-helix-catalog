@@ -93,8 +93,6 @@
     <Compile Include="Commands\Export.cs" />
     <Compile Include="Commands\Import.cs" />
     <Compile Include="Commands\New.cs" />
-    <Compile Include="Data\Computed Fields\OriginalUrlStringComputedField.cs" />
-    <Compile Include="Data\Computed Fields\WildcardComputedField.cs" />
     <Compile Include="Data\Constants.cs" />
     <Compile Include="Dialogs\EditRedirectPage.cs" />
     <Compile Include="Dialogs\ExportPage.cs" />

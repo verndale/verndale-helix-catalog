@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using System.Web;
 using Sitecore;
 using Sitecore.Diagnostics;
 using Sitecore.Globalization;
@@ -31,7 +30,6 @@ namespace Verndale.Feature.Redirects.Commands
 
 		protected static void Run(ClientPipelineArgs args)
 		{
-			UrlString str2;
 			Assert.ArgumentNotNull(args, "args");
 			if (args.IsPostBack)
 			{
@@ -51,18 +49,17 @@ namespace Verndale.Feature.Redirects.Commands
 				string[] values = results.Split('|');
 				var oldValue = values[1];
 				var newValue = values[2];
-				var encodedOldValue = HttpUtility.HtmlEncode(oldValue);
 				var siteName = values[3];
 
 				if (Regex.IsMatch(oldValue, Data.Constants.HostNameRegex))
 				{
 					SheerResponse.Alert(Translate.Text("Only partial URLs are allowed in the Old URL field."));
-					goto Label_00C5;
+					ShowModal(args);
 				}
 
 				var repository = new Repository("sitecore_master_index");
 
-				if (!repository.RedirectExists(oldValue) && !repository.RedirectExists(encodedOldValue)) // check if the old redirect exists here
+				if (!repository.RedirectExists(oldValue, siteName)) // check if the old redirect exists here
 				{
 					try
 					{
@@ -74,15 +71,19 @@ namespace Verndale.Feature.Redirects.Commands
 					catch (Exception exception)
 					{
 						ajaxScriptManager.Alert(Translate.Text("An error occured while creating the redirect for\"\":\n\n{1}", new object[] { values[1], exception.Message }));
-						goto Label_00C5;
+						ShowModal(args);
 					}
 				}
 				SheerResponse.Alert(Translate.Text("A redirect with the old URL \"{0}\" already exists.", new object[] { values[1] }), new string[0]);
 			}
 
-			Label_00C5:
-			str2 = new UrlString("/sitecore/shell/~/xaml/Sitecore.SitecoreModule.Shell.Redirect.NewRedirect.aspx");
-			SheerResponse.ShowModalDialog(str2.ToString(), "780", "350", string.Empty, true);
+			ShowModal(args);
+		}
+
+		private static void ShowModal(ClientPipelineArgs args)
+		{
+			var sheerUrl = new UrlString("/sitecore/shell/~/xaml/Sitecore.SitecoreModule.Shell.Redirect.NewRedirect.aspx");
+			SheerResponse.ShowModalDialog(sheerUrl.ToString(), "780", "350", string.Empty, true);
 			args.WaitForPostBack();
 		}
 	}

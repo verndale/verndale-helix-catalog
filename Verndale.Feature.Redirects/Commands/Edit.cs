@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Text.RegularExpressions;
-using System.Web;
 using Sitecore;
 using Sitecore.Data;
 using Sitecore.Diagnostics;
@@ -83,7 +82,6 @@ namespace Verndale.Feature.Redirects.Commands
 				string[] values = results.Split('|');
 				var oldValue = values[1];
 				var newValue = values[2];
-				var encodedOldValue = HttpUtility.HtmlEncode(oldValue);
 				var siteName = values[3];
 
 				if (Regex.IsMatch(oldValue, Data.Constants.HostNameRegex))
@@ -92,7 +90,7 @@ namespace Verndale.Feature.Redirects.Commands
 					return;
 				}
 
-				if (!Repository.CheckUrlExists(id, oldValue) && !Repository.CheckUrlExists(id, encodedOldValue)) // check if the old redirect exists here
+				if (!Repository.CheckUrlExists(id, oldValue, siteName)) // check if the old redirect exists here
 				{
 					try
 					{
@@ -116,8 +114,7 @@ namespace Verndale.Feature.Redirects.Commands
 			else
 			{
 				ajaxScriptManager.Alert("Are you sure you want to Edit this redirect?");
-				UrlString editRedirectUrl =
-					new UrlString("/sitecore/shell/~/xaml/Sitecore.SitecoreModule.Shell.Redirect.EditRedirect.aspx");
+				UrlString editRedirectUrl = new UrlString("/sitecore/shell/~/xaml/Sitecore.SitecoreModule.Shell.Redirect.EditRedirect.aspx");
 				editRedirectUrl.Parameters["ID"] = args.Parameters["ID"];
 				SheerResponse.ShowModalDialog(editRedirectUrl.ToString(), "780", "350", string.Empty, true);
 				args.WaitForPostBack();

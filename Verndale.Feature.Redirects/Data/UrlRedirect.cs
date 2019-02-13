@@ -17,15 +17,9 @@ namespace Verndale.Feature.Redirects.Data
 		[IndexField("is_301")]
 		public bool IsPermanent { get; set; }
 
-		[IndexField("nowildcardurl")]
-		public string NoWildCardUrl { get; set; }
-
-		[IndexField("originalurlstring")]
-		public string OriginalUrlString { get; set; }
-
 		public string RedirectTypeString
 		{
-			get => IsPermanent ? "301" : "302";
+			get { return IsPermanent ? "301" : "302"; }
 		}
 	}
 }

@@ -27,8 +27,8 @@ Installation
 
 This library requires a Sitecore Package (included). The package should install automatically when you build and deploy your project.
 	</description>
-	<releaseNotes>Ensured the package manager only runs on CM type environments.</releaseNotes>
+	<releaseNotes>Improved calls to the index. Enforced publishing required to "activate" a given rule.</releaseNotes>
 	<copyright>Copyright 2018</copyright>
-	<tags>Sitecore, Sitecore Helix, Sitecore Habitat, Sitecore Feature</tags>
+	<tags>Sitecore, Sitecore Helix, Sitecore Feature</tags>
   </metadata>
 </package>
